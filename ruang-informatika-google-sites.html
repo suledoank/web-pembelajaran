@@ -1,0 +1,1097 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ruang Informatika Kelas X</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Layout: sticky top bar + single-page routes (hash). Cool-grey ground, one cyan accent,
+   three lesson hues (blue / teal / amber). Faux device screens use their own --scr/--win tokens. */
+:root{
+  --bg:#F4F7FA; --surface:#FFFFFF; --surface-2:#EAF0F5; --ink:#0B1A28; --muted:#516579; --line:#D6E0E9;
+  --accent:#0E7490; --accent-soft:#DDF1F6; --on-accent:#FFFFFF;
+  --c1:#2563EB; --c2:#0F766E; --c3:#B45309;
+  --ok:#15803D; --warn:#B45309; --bad:#B91C1C;
+  --ok-soft:#E3F4E8; --warn-soft:#FBEFD9; --bad-soft:#FBE4E4;
+  --scr:#0B2A4A; --scr-2:#123A63; --scr-ink:#EAF2FB; --scr-line:#2B5A8C; --scr-btn:#2B7CD3; --hit:#FBBF24;
+  --win-bg:#F1F3F5; --win-ink:#1B1F24; --win-line:#CBD2D9; --win-sel:#CFE4FA; --bezel:#1B2A38;
+  --shadow:0 1px 2px rgba(11,26,40,.05),0 10px 28px rgba(11,26,40,.07);
+  --font-display:'Space Grotesk',system-ui,sans-serif; --font-body:'Inter',system-ui,sans-serif; --font-mono:'JetBrains Mono',ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#08121B; --surface:#0F1D2A; --surface-2:#14283A; --ink:#E7EEF5; --muted:#93A8BB; --line:#203649;
+  --accent:#22D3EE; --accent-soft:#0E2E3B; --on-accent:#03202A;
+  --c1:#60A5FA; --c2:#2DD4BF; --c3:#FBBF24;
+  --ok:#4ADE80; --warn:#FBBF24; --bad:#F87171;
+  --ok-soft:#10301E; --warn-soft:#33270E; --bad-soft:#3A1717;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 28px rgba(0,0,0,.35); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#08121B; --surface:#0F1D2A; --surface-2:#14283A; --ink:#E7EEF5; --muted:#93A8BB; --line:#203649;
+  --accent:#22D3EE; --accent-soft:#0E2E3B; --on-accent:#03202A;
+  --c1:#60A5FA; --c2:#2DD4BF; --c3:#FBBF24;
+  --ok:#4ADE80; --warn:#FBBF24; --bad:#F87171;
+  --ok-soft:#10301E; --warn-soft:#33270E; --bad-soft:#3A1717;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 28px rgba(0,0,0,.35); color-scheme:dark}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.65 var(--font-body);-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:60}
+h1,h2,h3,h4{font-family:var(--font-display);line-height:1.18;margin:0;text-wrap:balance;letter-spacing:-.01em}
+p{margin:0}
+a{color:var(--accent)}
+button{font:inherit;color:inherit;cursor:pointer}
+code,kbd,.mono{font-family:var(--font-mono);font-size:.88em}
+code{background:var(--surface-2);padding:.12em .4em;border-radius:5px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
+.wrap{max-width:1120px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.eyebrow{font:500 12px/1 var(--font-mono);letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 18px;border-radius:10px;border:1px solid var(--line);background:var(--surface);font-weight:500;text-decoration:none;color:var(--ink);transition:transform .15s,border-color .15s,background .15s}
+.btn:hover{border-color:var(--accent)}
+.btn:active{transform:translateY(1px)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.btn.primary:hover{filter:brightness(1.08)}
+.btn.sm{padding:7px 12px;font-size:14px;border-radius:8px}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.btn svg{width:18px;height:18px;flex:none}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:99px;background:var(--surface-2);font-size:13px;color:var(--muted);white-space:nowrap}
+.chip svg{width:14px;height:14px}
+
+/* top bar */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.bar{display:flex;align-items:center;gap:12px;height:64px}
+.brand{display:flex;align-items:center;gap:11px;text-decoration:none;color:var(--ink);margin-right:auto;min-width:0}
+.mark{width:38px;height:38px;border-radius:10px;background:var(--ink);color:var(--bg);display:grid;place-items:center;font:700 15px/1 var(--font-display);letter-spacing:.02em;position:relative;flex:none}
+.mark::after{content:"";position:absolute;right:-3px;bottom:-3px;width:11px;height:11px;border-radius:50%;background:var(--accent);border:2px solid var(--bg)}
+.brand-t{display:flex;flex-direction:column;min-width:0}
+.brand-t b{font:600 16px/1.2 var(--font-display)}
+.brand-t small{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#nav{display:flex;gap:2px}
+#nav a{padding:8px 12px;border-radius:8px;text-decoration:none;color:var(--muted);font-weight:500;font-size:15px;white-space:nowrap}
+#nav a:hover{color:var(--ink);background:var(--surface-2)}
+#nav a[aria-current="page"]{color:var(--accent);background:var(--accent-soft)}
+.icon-btn{width:40px;height:40px;border-radius:10px;border:1px solid var(--line);background:var(--surface);display:grid;place-items:center;padding:0}
+.icon-btn svg{width:19px;height:19px}
+#menuBtn{display:none}
+@media (max-width:860px){
+  #menuBtn{display:grid}
+  #nav{position:absolute;left:0;right:0;top:100%;flex-direction:column;background:var(--bg);border-bottom:1px solid var(--line);padding:8px max(16px,env(safe-area-inset-left,0px)) 14px;display:none}
+  #nav.open{display:flex}
+  #nav a{padding:12px;font-size:16px}
+}
+
+/* generic sections */
+.section{padding-block:56px}
+.section-head{display:flex;flex-direction:column;gap:10px;margin-bottom:28px;max-width:640px}
+.section-head h2{font-size:clamp(26px,3.4vw,36px)}
+.section-head p{color:var(--muted)}
+
+/* hero */
+.hero{padding-block:48px 24px;background:radial-gradient(circle at 1px 1px,color-mix(in srgb,var(--muted) 22%,transparent) 1px,transparent 1.2px) 0 0/22px 22px}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:40px;align-items:center}
+.hero h1{font-size:clamp(34px,5.2vw,58px);font-weight:700;margin:16px 0 18px}
+.hero h1 em{font-style:normal;color:var(--accent)}
+.hero .lead{font-size:18px;color:var(--muted);max-width:520px}
+.hero-cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
+.hero-meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}
+.hero-art{width:100%;height:auto;max-width:520px;justify-self:center}
+@media (max-width:860px){.hero-grid{grid-template-columns:1fr;gap:20px}.hero-art{max-width:420px}}
+
+/* hero art */
+.ha-bezel{fill:var(--bezel)} .ha-screen{fill:var(--scr)} .ha-base{fill:var(--bezel)} .ha-notch{fill:var(--surface-2)}
+.ha-track{fill:var(--scr-line);opacity:.55} .ha-txt{fill:var(--scr-ink);font:500 13px var(--font-mono)}
+.ha-fill{transform-box:fill-box;transform-origin:left center;transform:scaleX(0)}
+.ha-fill.f1{fill:#60A5FA;animation:hf1 9s infinite}.ha-fill.f2{fill:#2DD4BF;animation:hf2 9s infinite}.ha-fill.f3{fill:#FBBF24;animation:hf3 9s infinite}
+.ha-ok{opacity:0;fill:none;stroke:#4ADE80;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.ha-ok.o1{animation:ho1 9s infinite}.ha-ok.o2{animation:ho2 9s infinite}.ha-ok.o3{animation:ho3 9s infinite}
+@keyframes hf1{0%{transform:scaleX(0)}28%,92%{transform:scaleX(1)}100%{transform:scaleX(0)}}
+@keyframes hf2{0%,30%{transform:scaleX(0)}58%,92%{transform:scaleX(1)}100%{transform:scaleX(0)}}
+@keyframes hf3{0%,60%{transform:scaleX(0)}88%,92%{transform:scaleX(1)}100%{transform:scaleX(0)}}
+@keyframes ho1{0%,28%{opacity:0}32%,92%{opacity:1}100%{opacity:0}}
+@keyframes ho2{0%,58%{opacity:0}62%,92%{opacity:1}100%{opacity:0}}
+@keyframes ho3{0%,88%{opacity:0}90%,92%{opacity:1}100%{opacity:0}}
+.ha-chip rect{fill:var(--surface);stroke:var(--line)} .ha-chip text{fill:var(--ink);font:500 12px var(--font-mono)}
+.ha-chip{animation:bob 5s ease-in-out infinite}.ha-chip.b2{animation-delay:-1.6s}.ha-chip.b3{animation-delay:-3.2s}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+
+/* meeting cards */
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+@media (max-width:900px){.cards{grid-template-columns:1fr}}
+.pcard{display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden;text-decoration:none;color:var(--ink);box-shadow:var(--shadow);transition:transform .2s,border-color .2s}
+.pcard:hover{transform:translateY(-3px);border-color:var(--hue)}
+.pcard .art{background:color-mix(in srgb,var(--hue) 11%,var(--surface));border-bottom:1px solid var(--line);aspect-ratio:12/7;display:grid;place-items:center}
+.pcard .art svg{width:100%;height:100%}
+.pcard .body{display:flex;flex-direction:column;gap:10px;padding:20px 20px 22px;flex:1}
+.pcard .tag{font:500 12px/1 var(--font-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--hue)}
+.pcard h3{font-size:22px}
+.pcard p{color:var(--muted);font-size:15px}
+.pcard .meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:2px}
+.pcard .go{margin-top:auto;padding-top:8px;display:flex;align-items:center;justify-content:space-between;font-weight:600;color:var(--hue)}
+.pcard .go svg{width:20px;height:20px;transition:transform .2s}
+.pcard:hover .go svg{transform:translateX(4px)}
+.h1c{--hue:var(--c1)}.h2c{--hue:var(--c2)}.h3c{--hue:var(--c3)}
+.score-pill{font:500 12px var(--font-mono);padding:3px 8px;border-radius:99px;background:var(--ok-soft);color:var(--ok)}
+
+/* card art */
+.ca-line{fill:none;stroke:var(--muted);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.ca-fill{fill:var(--surface);stroke:var(--muted);stroke-width:2}
+.ca-hue{fill:var(--hue)}.ca-hue-s{fill:none;stroke:var(--hue);stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.ca-scr{fill:var(--scr)}
+.usb{animation:usb 4.5s ease-in-out infinite}
+@keyframes usb{0%{transform:translateX(-34px);opacity:0}15%{opacity:1}35%,85%{transform:translateX(0);opacity:1}100%{transform:translateX(0);opacity:0}}
+.pg{transform-box:fill-box;transform-origin:left;fill:#60A5FA;animation:pg 4.5s ease-in-out infinite}
+@keyframes pg{0%,30%{transform:scaleX(0)}85%,100%{transform:scaleX(1)}}
+.warn-g{animation:wg 4s infinite}.ok-g{animation:og 4s infinite}
+@keyframes wg{0%,45%{opacity:1}55%,95%{opacity:0}100%{opacity:1}}
+@keyframes og{0%,45%{opacity:0}55%,95%{opacity:1}100%{opacity:0}}
+.tile{transform-box:fill-box;transform-origin:center;animation:pop 3.6s infinite}.tile.t2{animation-delay:.25s}.tile.t3{animation-delay:.5s}
+@keyframes pop{0%,10%{transform:scale(.6);opacity:.2}25%,85%{transform:scale(1);opacity:1}100%{transform:scale(.6);opacity:.2}}
+.dl{animation:dl 1.8s ease-in-out infinite}
+@keyframes dl{0%,100%{transform:translateY(-3px)}50%{transform:translateY(5px)}}
+
+/* identity */
+.id-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+@media (max-width:760px){.id-grid{grid-template-columns:1fr}}
+.idcard{display:flex;gap:18px;align-items:center;padding:22px;background:var(--surface);border:1px solid var(--line);border-radius:16px}
+.avatar{width:68px;height:68px;border-radius:16px;display:grid;place-items:center;flex:none;font:700 22px var(--font-display);background:var(--ink);color:var(--bg)}
+.avatar.t{background:var(--accent-soft);color:var(--accent)}
+.idcard dl{margin:6px 0 0;display:grid;grid-template-columns:auto 1fr;gap:2px 14px;font-size:14.5px}
+.idcard dt{color:var(--muted)}.idcard dd{margin:0;font-weight:500}
+.idcard h3{font-size:20px}
+
+.cta-band{display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;padding:28px;border-radius:18px;background:var(--ink);color:var(--bg)}
+.cta-band h3{font-size:24px}.cta-band p{opacity:.78;margin-top:6px;max-width:520px}
+.cta-band .btn{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+
+footer{border-top:1px solid var(--line);margin-top:40px;padding-block:28px;color:var(--muted);font-size:14px}
+footer .wrap{display:flex;flex-wrap:wrap;gap:8px 24px;justify-content:space-between}
+
+/* lesson page */
+.l-head{padding-block:36px 8px}
+.crumbs{display:flex;gap:8px;align-items:center;font-size:14px;color:var(--muted);margin-bottom:18px}
+.crumbs a{color:var(--muted);text-decoration:none}.crumbs a:hover{color:var(--accent)}
+.l-title{display:flex;flex-direction:column;gap:14px;max-width:760px}
+.l-title .tag{font:500 13px/1 var(--font-mono);letter-spacing:.09em;text-transform:uppercase;color:var(--hue)}
+.l-title h1{font-size:clamp(32px,4.6vw,48px);font-weight:700}
+.l-title p{font-size:18px;color:var(--muted)}
+.l-layout{display:grid;grid-template-columns:210px minmax(0,1fr);gap:40px;padding-block:28px 24px;align-items:start}
+@media (max-width:960px){.l-layout{grid-template-columns:minmax(0,1fr);gap:20px}}
+.toc{position:sticky;top:calc(80px + env(safe-area-inset-top,0px));display:flex;flex-direction:column;gap:2px}
+.toc .eyebrow{margin-bottom:10px}
+.toc button{text-align:left;background:none;border:0;border-left:2px solid var(--line);padding:8px 14px;color:var(--muted);font-size:14.5px}
+.toc button:hover{color:var(--ink);border-left-color:var(--hue)}
+.toc button.on{color:var(--hue);border-left-color:var(--hue);font-weight:600}
+@media (max-width:960px){
+  .toc{position:sticky;top:calc(64px + env(safe-area-inset-top,0px));z-index:20;flex-direction:row;overflow-x:auto;background:var(--bg);padding:8px 0;margin-inline:-4px;gap:6px;border-bottom:1px solid var(--line)}
+  .toc .eyebrow{display:none}
+  .toc button{border:1px solid var(--line);border-radius:99px;padding:6px 14px;white-space:nowrap;background:var(--surface)}
+  .toc button.on{background:color-mix(in srgb,var(--hue) 14%,var(--surface));border-color:var(--hue)}
+}
+.l-body{display:flex;flex-direction:column;gap:56px;min-width:0}
+.sec{scroll-margin-top:96px;min-width:0}
+@media (max-width:960px){.sec{scroll-margin-top:136px}}
+.sec>h2{font-size:clamp(24px,3vw,30px);margin-bottom:6px}
+.sec>.sub{color:var(--muted);margin-bottom:22px;max-width:680px}
+.prose{max-width:720px;display:flex;flex-direction:column;gap:14px}
+.prose h3{font-size:19px;margin-top:10px}
+.prose ul,.prose ol{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:6px}
+.goals{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px 22px}
+.goals h3{font-size:16px;margin-bottom:10px}
+.goals ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px}
+.goals li{display:flex;gap:10px;align-items:flex-start;font-size:15.5px}
+.goals li svg{width:18px;height:18px;flex:none;margin-top:3px;color:var(--hue)}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+@media (max-width:760px){.grid2,.grid3{grid-template-columns:1fr}}
+.tcard{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px 20px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.tcard h3{font-size:17px}
+.tcard p,.tcard li{font-size:15px;color:var(--muted)}
+.tcard ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+.tcard .num{font:600 12px var(--font-mono);color:var(--hue);letter-spacing:.08em}
+.callout{display:flex;gap:12px;padding:14px 16px;border-radius:12px;font-size:15px;border:1px solid transparent;min-width:0}
+.callout svg{width:20px;height:20px;flex:none;margin-top:2px}
+.callout b{display:block;margin-bottom:2px}
+.callout.tip{background:var(--accent-soft);color:var(--ink);border-color:color-mix(in srgb,var(--accent) 30%,transparent)}.callout.tip svg{color:var(--accent)}
+.callout.warn{background:var(--warn-soft);border-color:color-mix(in srgb,var(--warn) 35%,transparent)}.callout.warn svg{color:var(--warn)}
+.callout.bad{background:var(--bad-soft);border-color:color-mix(in srgb,var(--bad) 35%,transparent)}.callout.bad svg{color:var(--bad)}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+.tbl table{border-collapse:collapse;width:100%;min-width:520px;font-size:14.5px}
+.tbl th,.tbl td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+.tbl th{font:600 12px var(--font-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:var(--surface-2)}
+.tbl tr:last-child td{border-bottom:0}
+pre.code{margin:0;background:var(--ink);color:var(--bg);border-radius:12px;padding:14px 16px;overflow-x:auto;font:400 13.5px/1.6 var(--font-mono)}
+pre.code .c{opacity:.6}
+.steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:0;counter-reset:st}
+.steps li{position:relative;padding:0 0 22px 46px;counter-increment:st;min-width:0}
+.steps li::before{content:counter(st);position:absolute;left:0;top:0;width:30px;height:30px;border-radius:50%;background:color-mix(in srgb,var(--hue) 14%,var(--surface));color:var(--hue);display:grid;place-items:center;font:600 14px var(--font-mono)}
+.steps li::after{content:"";position:absolute;left:14px;top:34px;bottom:4px;width:2px;background:var(--line)}
+.steps li:last-child::after{display:none}
+.steps li b{display:block;font-family:var(--font-display);font-size:16.5px;margin-bottom:2px}
+.steps li span{color:var(--muted);font-size:15px}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+.tab{padding:8px 16px;border-radius:99px;border:1px solid var(--line);background:var(--surface);font-weight:500;font-size:14.5px}
+.tab[aria-selected="true"]{background:var(--hue);border-color:var(--hue);color:var(--on-accent)}
+.pager{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding-block:8px 24px}
+.pager a{display:flex;flex-direction:column;gap:4px;padding:16px 18px;border:1px solid var(--line);border-radius:14px;background:var(--surface);text-decoration:none;color:var(--ink)}
+.pager a:hover{border-color:var(--accent)}
+.pager small{color:var(--muted);font:500 12px var(--font-mono);letter-spacing:.06em;text-transform:uppercase}
+.pager a.next{text-align:right;grid-column:2}
+@media (max-width:560px){.pager{grid-template-columns:1fr}.pager a.next{grid-column:auto}}
+
+/* simulation */
+.sim{border:1px solid var(--line);background:var(--surface);border-radius:16px;overflow:hidden;box-shadow:var(--shadow)}
+.sim-head{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.sim-head h3{font-size:18px;margin-top:4px}
+.stepcount{font:500 13px var(--font-mono);color:var(--muted)}.stepcount b{color:var(--hue)}
+.sim-body{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr)}
+@media (max-width:860px){.sim-body{grid-template-columns:minmax(0,1fr)}}
+.sim-view{background:var(--surface-2);padding:20px;display:flex;flex-direction:column;align-items:center;min-width:0}
+.monitor{container-type:inline-size;width:100%;background:var(--bezel);padding:10px;border-radius:12px;position:relative}
+.screen{aspect-ratio:16/10;background:var(--scr);color:var(--scr-ink);border-radius:4px;overflow:hidden;position:relative;font-size:max(8.5px,2.35cqw);line-height:1.38;display:flex;flex-direction:column;animation:fadein .35s}
+.screen.light{background:var(--win-bg);color:var(--win-ink)}
+@keyframes fadein{from{opacity:0}to{opacity:1}}
+.stand{width:22%;height:12px;background:var(--bezel);opacity:.9;border-radius:0 0 8px 8px}
+.stand-base{width:36%;height:5px;background:var(--bezel);border-radius:4px;opacity:.7}
+.sim-info{padding:22px 24px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.sim-info h4{font-size:20px}
+.sim-info .si-desc{color:var(--muted);font-size:15.5px}
+.sim-ctrl{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:14px 18px;border-top:1px solid var(--line);background:var(--surface)}
+.dots{display:flex;gap:6px;margin-left:auto;flex-wrap:wrap}
+.dot{width:12px;height:12px;border-radius:50%;border:0;padding:0;background:var(--line)}
+.dot.done{background:color-mix(in srgb,var(--hue) 45%,var(--line))}.dot.cur{background:var(--hue);box-shadow:0 0 0 3px color-mix(in srgb,var(--hue) 25%,transparent)}
+.hit{position:relative;cursor:pointer}
+.hit::after{content:"";position:absolute;inset:-.35em;border:.22em solid var(--hit);border-radius:.5em;animation:pulse 1.4s ease-in-out infinite;pointer-events:none}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(1.04)}}
+.pad{padding:4.5% 5.5%;display:flex;flex-direction:column;gap:.9em;flex:1;min-height:0}
+.s-title{font-size:1.75em;font-weight:300;letter-spacing:-.01em}
+.s-sub{opacity:.8}
+.s-field{display:flex;flex-direction:column;gap:.25em}
+.s-field span{opacity:.8}
+.s-box{background:var(--scr-ink);color:var(--scr);padding:.35em .7em;border-radius:.2em;width:78%}
+.s-foot{margin-top:auto;display:flex;justify-content:flex-end;gap:.8em;align-items:center}
+.s-btn{background:var(--scr-btn);color:#fff;padding:.45em 1.8em;border-radius:.25em;font-weight:500;white-space:nowrap}
+.s-btn.ghost{background:transparent;border:1px solid var(--scr-line);color:var(--scr-ink)}
+.s-big{background:var(--scr-btn);color:#fff;padding:.7em 3em;border-radius:.3em;font-size:1.3em;font-weight:500;align-self:center}
+.s-list{display:flex;flex-direction:column;gap:.3em}
+.s-item{padding:.45em .8em;border-radius:.2em;border:1px solid transparent}
+.s-item.sel{background:var(--scr-ink);color:var(--scr)}
+.s-item.dim{opacity:.45}
+.s-opt{border:1px solid var(--scr-line);background:var(--scr-2);border-radius:.3em;padding:.8em 1em;display:flex;flex-direction:column;gap:.15em}
+.s-opt b{font-weight:600}.s-opt small{opacity:.75;font-size:.92em}
+.s-tbl{border:1px solid var(--scr-line);border-radius:.25em;overflow:hidden}
+.s-tr{display:grid;grid-template-columns:2.4fr 1fr 1fr;padding:.4em .8em;border-bottom:1px solid var(--scr-line)}
+.s-tr:last-child{border-bottom:0}.s-tr.hd{opacity:.65;font-size:.9em}.s-tr.sel{background:var(--scr-btn)}
+.s-bar{height:.8em;background:var(--scr-line);border-radius:99px;overflow:hidden}
+.s-bar i{display:block;height:100%;width:100%;background:var(--scr-ink);border-radius:inherit;transform-origin:left;animation:fill 3.4s ease-out forwards;transform:scaleX(0)}
+.s-bar.light{background:#cfd6dd}.s-bar.light i{background:#2B7CD3}
+@keyframes fill{to{transform:scaleX(1)}}
+.s-check{display:flex;gap:.6em;align-items:center}.s-check i{width:1.1em;height:1.1em;border-radius:50%;border:1.5px solid var(--scr-ink);display:inline-block;flex:none}
+.s-check i.ok{background:#4ADE80;border-color:#4ADE80}
+.s-check i.run{border-style:dashed;animation:spin 1.4s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.s-desk{flex:1;background:linear-gradient(135deg,var(--scr) 0%,#1D6FB8 100%);position:relative;display:flex;align-items:center;justify-content:center}
+.s-task{height:2.9em;background:rgba(8,20,34,.86);display:flex;align-items:center;justify-content:center;gap:.9em;color:#fff}
+.s-task .sq{width:1.3em;height:1.3em;display:grid;grid-template-columns:1fr 1fr;gap:2px}.s-task .sq i{background:#5CB3FF;border-radius:1px}
+.s-task small{margin-left:auto;margin-right:2%;font-size:.85em;opacity:.8}
+.s-welcome{background:var(--win-bg);color:var(--win-ink);border-radius:.5em;padding:1.1em 1.6em;display:flex;flex-direction:column;gap:.3em;align-items:center;box-shadow:0 .8em 2em rgba(0,0,0,.3)}
+.s-welcome b{font-size:1.2em}
+.wnd{flex:1;display:flex;flex-direction:column;min-height:0}
+.wnd-bar{background:#fff;color:#1B1F24;padding:.5em .9em;display:flex;align-items:center;gap:.7em;border-bottom:1px solid var(--win-line);font-size:.95em}
+.wnd-bar .ctl{margin-left:auto;display:flex;gap:.8em;opacity:.6;letter-spacing:.2em}
+.wnd-menu{padding:.3em .9em;border-bottom:1px solid var(--win-line);display:flex;gap:1.2em;font-size:.9em}
+.wnd-body{flex:1;padding:.8em 1em;display:flex;flex-direction:column;gap:.15em;position:relative;background:#fff;min-height:0}
+.tr{display:flex;gap:.6em;align-items:center;padding:.22em .5em;border-radius:.25em}
+.tr.l2{margin-left:1.6em}
+.tr .ic{width:1.1em;height:1.1em;display:inline-grid;place-items:center;font-size:.95em}
+.tr .wi{color:#B45309;font-weight:700}
+.tr.bad{background:#FFF4D6}
+.ctx{position:absolute;left:34%;top:64%;background:#fff;border:1px solid var(--win-line);box-shadow:0 .5em 1.4em rgba(0,0,0,.25);border-radius:.3em;padding:.3em;min-width:15em;z-index:3}
+.ctx div{padding:.35em .8em;border-radius:.2em}
+.ctx .sep{height:1px;padding:0;margin:.25em 0;background:var(--win-line)}
+.ctx .on{background:var(--win-sel)}
+.dlg{position:absolute;inset:8% 9%;background:#fff;color:var(--win-ink);border:1px solid var(--win-line);box-shadow:0 1em 2.4em rgba(0,0,0,.35);border-radius:.4em;display:flex;flex-direction:column;z-index:4}
+.dlg h5{margin:0;font:600 1.1em var(--font-body);padding:.8em 1em .2em;color:#0B5CAD}
+.dlg .dbody{padding:.5em 1em;display:flex;flex-direction:column;gap:.5em;flex:1;min-height:0}
+.dlg .dfoot{padding:.7em 1em;background:var(--win-bg);display:flex;justify-content:flex-end;gap:.6em;border-top:1px solid var(--win-line);border-radius:0 0 .4em .4em}
+.dbtn{background:#E1E6EB;border:1px solid #AEB6BF;padding:.25em 1.4em;border-radius:.2em}
+.dbtn.def{background:#2B7CD3;color:#fff;border-color:#2B7CD3}
+.choice{border:1px solid var(--win-line);border-radius:.3em;padding:.55em .8em;display:flex;flex-direction:column;background:#fff}
+.choice b{color:#0B5CAD;font-weight:600}.choice small{color:#4A5560}
+.choice .tagm{align-self:flex-start;font:500 .78em var(--font-mono);padding:.1em .6em;border-radius:99px;background:#E0F0FF;color:#0B5CAD;margin-bottom:.2em}
+.uac{position:absolute;inset:0;background:rgba(0,0,0,.45);display:grid;place-items:center;z-index:5}
+.uac .dlg{position:static;width:74%;max-height:86%}
+.uac .band{background:#0B5CAD;color:#fff;padding:.6em 1em;font-weight:500}
+.brw{background:#fff;color:#1B1F24;flex:1;display:flex;flex-direction:column}
+.brw .addr{display:flex;gap:.6em;align-items:center;padding:.5em .8em;background:#E9EDF1}
+.brw .addr span{flex:1;background:#fff;border-radius:99px;padding:.25em 1em;font-family:var(--font-mono);font-size:.92em}
+.brw .page{flex:1;display:flex;flex-direction:column;gap:.7em;align-items:center;justify-content:center;text-align:center;padding:1em}
+.brw .page h6{margin:0;font:700 1.7em var(--font-display)}
+.brw .dlbtn{background:#2B7CD3;color:#fff;padding:.55em 2em;border-radius:.3em;font-weight:500}
+.brw .pop{position:absolute;right:3%;top:13%;width:42%;background:#fff;border:1px solid var(--win-line);box-shadow:0 .6em 1.6em rgba(0,0,0,.25);border-radius:.4em;padding:.7em 1em;display:flex;flex-direction:column;gap:.5em;z-index:3}
+.brw .pop .fl{display:flex;gap:.6em;align-items:center;padding:.4em .5em;border-radius:.3em;background:var(--win-sel)}
+.gl{width:2em;height:2em;border-radius:.45em;display:grid;place-items:center;color:#fff;font-weight:700;flex:none}
+.setup{position:absolute;inset:9% 12%;background:#fff;color:var(--win-ink);border:1px solid var(--win-line);border-radius:.4em;box-shadow:0 1em 2.4em rgba(0,0,0,.3);display:flex;flex-direction:column}
+.setup .sb{background:#fff;border-bottom:1px solid var(--win-line);padding:.5em .9em;display:flex;gap:.6em;align-items:center}
+.setup .sbody{padding:.9em 1.1em;display:flex;flex-direction:column;gap:.55em;flex:1;min-height:0}
+.setup .sfoot{padding:.6em 1em;background:var(--win-bg);display:flex;justify-content:flex-end;gap:.6em;border-top:1px solid var(--win-line)}
+.cb{display:flex;gap:.6em;align-items:center}.cb i{width:1.05em;height:1.05em;border:1.5px solid #6b7782;border-radius:.2em;display:grid;place-items:center;font-style:normal;font-size:.85em;flex:none}.cb i.on{background:#2B7CD3;border-color:#2B7CD3;color:#fff}
+.fieldv{border:1px solid #AEB6BF;border-radius:.2em;padding:.3em .6em;background:#fff;font-family:var(--font-mono);font-size:.92em}
+
+/* quiz */
+.quiz{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:24px;box-shadow:var(--shadow)}
+.q-top{display:flex;align-items:center;gap:14px;margin-bottom:20px}
+.q-prog{flex:1;height:8px;border-radius:99px;background:var(--surface-2);overflow:hidden}
+.q-prog i{display:block;height:100%;background:var(--hue);border-radius:inherit;transition:width .3s}
+.q-top span{font:500 13px var(--font-mono);color:var(--muted);white-space:nowrap}
+.q-text{font:600 20px/1.4 var(--font-display);margin-bottom:18px;max-width:720px}
+.q-opts{display:flex;flex-direction:column;gap:10px;max-width:760px}
+.q-opt{display:flex;gap:14px;align-items:flex-start;text-align:left;padding:13px 16px;border-radius:12px;border:1.5px solid var(--line);background:var(--bg);transition:border-color .15s,background .15s}
+.q-opt:hover:not([disabled]){border-color:var(--hue)}
+.q-opt .l{width:26px;height:26px;border-radius:8px;background:var(--surface-2);display:grid;place-items:center;font:600 13px var(--font-mono);flex:none;margin-top:1px}
+.q-opt[disabled]{cursor:default}
+.q-opt.ok{border-color:var(--ok);background:var(--ok-soft)}.q-opt.ok .l{background:var(--ok);color:var(--surface)}
+.q-opt.no{border-color:var(--bad);background:var(--bad-soft)}.q-opt.no .l{background:var(--bad);color:var(--surface)}
+.q-fb{margin-top:16px;max-width:760px}
+.q-next{margin-top:16px;display:flex;justify-content:flex-end;max-width:760px}
+.q-res{display:flex;flex-direction:column;gap:20px}
+.q-score{display:flex;align-items:center;gap:22px;flex-wrap:wrap}
+.ring{--p:0;width:116px;height:116px;border-radius:50%;background:conic-gradient(var(--hue) calc(var(--p)*1%),var(--surface-2) 0);display:grid;place-items:center;flex:none}
+.ring div{width:88px;height:88px;border-radius:50%;background:var(--surface);display:grid;place-items:center;font:700 26px var(--font-display)}
+.q-score h3{font-size:24px}.q-score p{color:var(--muted);margin-top:4px}
+.review{display:flex;flex-direction:column;gap:10px}
+.review .tcard{gap:4px}
+.review .tcard b{font-weight:600;color:var(--ink);font-size:15px}
+
+/* group page */
+.g-layout{display:grid;grid-template-columns:minmax(0,380px) minmax(0,1fr);gap:28px;align-items:start;padding-block:12px 24px}
+@media (max-width:900px){.g-layout{grid-template-columns:minmax(0,1fr)}}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:16px}
+.field{display:flex;flex-direction:column;gap:6px}
+.field label,.field .lab{font-weight:600;font-size:14.5px}
+.field small{color:var(--muted)}
+textarea,input[type=number]{font:inherit;color:var(--ink);background:var(--bg);border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;width:100%}
+textarea{min-height:230px;resize:vertical;line-height:1.55}
+textarea:focus,input[type=number]:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent)}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:4px;background:var(--surface-2);padding:4px;border-radius:12px}
+.seg label{display:flex;justify-content:center;padding:9px 8px;border-radius:9px;font-weight:500;font-size:14.5px;cursor:pointer;text-align:center}
+.seg input{position:absolute;opacity:0;pointer-events:none}
+.seg label:has(input:checked){background:var(--surface);box-shadow:0 1px 3px rgba(0,0,0,.12);color:var(--accent)}
+.seg label:has(input:focus-visible){outline:2px solid var(--accent)}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.check{display:flex;gap:10px;align-items:center;font-size:15px;cursor:pointer}
+.check input{width:18px;height:18px;accent-color:var(--accent)}
+.g-res{min-width:0;display:flex;flex-direction:column;gap:16px}
+.g-bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+.g-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px}
+.gcard{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;animation:rise .45s both;animation-delay:calc(var(--i)*70ms)}
+@keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.gcard header{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:color-mix(in srgb,var(--hue) 12%,var(--surface));border-bottom:1px solid var(--line)}
+.gcard header b{font:600 16px var(--font-display);color:var(--hue)}
+.gcard header span{font:500 12px var(--font-mono);color:var(--muted)}
+.gcard ul{list-style:none;margin:0;padding:8px 6px 10px}
+.gcard li{padding:6px 10px;display:flex;gap:8px;align-items:center;border-radius:8px;font-size:15px;min-width:0;overflow-wrap:anywhere}
+.gcard li .lead{font:600 10.5px var(--font-mono);letter-spacing:.06em;text-transform:uppercase;background:var(--hue);color:var(--surface);padding:2px 6px;border-radius:99px;flex:none}
+.g-empty{border:1.5px dashed var(--line);border-radius:16px;padding:48px 24px;text-align:center;color:var(--muted);display:flex;flex-direction:column;gap:10px;align-items:center}
+.g-empty svg{width:40px;height:40px;color:var(--accent)}
+.g-note{font-size:14px;color:var(--muted)}
+.g-msg{font-size:14.5px;min-height:22px}.g-msg.err{color:var(--bad)}
+.shuffling .gcard{animation:none;opacity:.35}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition:none!important}
+  .ha-fill{transform:scaleX(1)}.ha-ok{opacity:1}
+  .s-bar i{transform:scaleX(1)}
+}
+</style>
+</head>
+<body>
+
+
+<header class="top"><div class="wrap bar">
+  <a class="brand" href="#beranda" aria-label="Ruang Informatika, ke beranda">
+    <span class="mark" aria-hidden="true">IT</span>
+    <span class="brand-t"><b>Ruang Informatika</b><small>SMA IT Caringin · Kelas X</small></span>
+  </a>
+  <nav id="nav" aria-label="Menu utama">
+    <a href="#beranda" data-r="beranda">Beranda</a>
+    <a href="#pertemuan-1" data-r="pertemuan-1">Pertemuan 1</a>
+    <a href="#pertemuan-2" data-r="pertemuan-2">Pertemuan 2</a>
+    <a href="#pertemuan-3" data-r="pertemuan-3">Pertemuan 3</a>
+    <a href="#kelompok-acak" data-r="kelompok-acak">Kelompok Acak</a>
+  </nav>
+  <button class="icon-btn" id="themeBtn" aria-label="Ganti tema terang atau gelap" type="button"></button>
+  <button class="icon-btn" id="menuBtn" aria-label="Buka menu" aria-expanded="false" type="button"></button>
+</div></header>
+<main id="app" tabindex="-1"></main>
+<footer><div class="wrap">
+  <span>SMA IT Caringin · Mata pelajaran Informatika · Kelas X</span>
+  <span>Media pembelajaran interaktif: instalasi Windows, driver, dan aplikasi</span>
+</div></footer>
+<script>
+(function(){
+'use strict';
+
+/* ====== Identitas (ubah di sini) ====== */
+const SEKOLAH={nama:'SMA IT Caringin',mapel:'Informatika',kelas:'X'};
+const GURU={nama:'Sulaeman, S.Kom',jabatan:'Guru Mata Pelajaran Informatika',kontak:'081322542369'};
+
+/* ====== Util ====== */
+const $=(s,r=document)=>r.querySelector(s);
+const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+const cleanups=[];
+const initials=n=>n.split(/\s+/).filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase();
+
+const ic=(d,extra='')=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ${extra}>${d}</svg>`;
+const I={
+  menu:ic('<path d="M4 7h16M4 12h16M4 17h16"/>'),
+  close:ic('<path d="M6 6l12 12M18 6L6 18"/>'),
+  sun:ic('<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>'),
+  moon:ic('<path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z"/>'),
+  arrow:ic('<path d="M5 12h14M13 6l6 6-6 6"/>'),
+  back:ic('<path d="M19 12H5M11 6l-6 6 6 6"/>'),
+  check:ic('<path d="M5 12.5l4.5 4.5L19 7.5"/>'),
+  info:ic('<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>'),
+  warn:ic('<path d="M12 3l10 18H2L12 3z"/><path d="M12 10v5M12 18h.01"/>'),
+  play:ic('<path d="M7 5l12 7-12 7V5z" fill="currentColor"/>'),
+  pause:ic('<path d="M8 5v14M16 5v14"/>'),
+  reset:ic('<path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/>'),
+  copy:ic('<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/>'),
+  shuffle:ic('<path d="M3 7h3l9 10h6M3 17h3l3-3.5M15 7h6M18 4l3 3-3 3M18 14l3 3-3 3"/>'),
+  users:ic('<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14.2a6.5 6.5 0 0 1 3.5 5.8"/>'),
+  clock:ic('<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>'),
+  film:ic('<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M10 9l5 3-5 3V9z" fill="currentColor"/>'),
+  quiz:ic('<circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 1-1 1.7M12 17h.01"/>'),
+  trash:ic('<path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/>')
+};
+
+/* ====== Callout / kuis helper ====== */
+const callout=(type,title,html)=>`<div class="callout ${type}">${type==='tip'?I.info:I.warn}<div><b>${title}</b>${html}</div></div>`;
+
+/* ====== Stepper (animasi langkah demi langkah) ====== */
+function mountStepper(root,cfg){
+  let i=0,timer=null;
+  const steps=cfg.steps;
+  root.innerHTML=`
+  <div class="sim">
+    <div class="sim-head"><div><span class="eyebrow">${I.film.replace('<svg','<svg style="width:13px;height:13px;vertical-align:-2px;margin-right:5px"')}Animasi interaktif</span><h3>${cfg.title}</h3></div>
+      <div class="stepcount">Langkah <b data-cur>1</b> / ${steps.length}</div></div>
+    ${cfg.tabs?`<div class="tabs" role="tablist" style="padding:14px 18px 0;margin:0">${cfg.tabs.map((t,k)=>`<button class="tab" role="tab" data-tab="${k}" aria-selected="${k===cfg.tab}">${t}</button>`).join('')}</div>`:''}
+    <div class="sim-body">
+      <div class="sim-view"><div class="monitor"><div class="screen" data-screen></div></div><div class="stand"></div><div class="stand-base"></div></div>
+      <div class="sim-info" aria-live="polite"><span class="eyebrow" data-kicker></span><h4 data-title></h4><p class="si-desc" data-desc></p><div data-tip></div></div>
+    </div>
+    <div class="sim-ctrl">
+      <button class="btn sm" data-prev type="button">${I.back}Sebelumnya</button>
+      <button class="btn sm primary" data-next type="button">Berikutnya${I.arrow}</button>
+      <button class="btn sm" data-play type="button">${I.play}Putar otomatis</button>
+      <button class="btn sm" data-reset type="button" aria-label="Ulangi dari awal">${I.reset}</button>
+      <div class="dots" data-dots></div>
+    </div>
+  </div>`;
+  const scr=$('[data-screen]',root),dots=$('[data-dots]',root),playBtn=$('[data-play]',root);
+  const api={next:()=>go(i+1),go};
+  function stop(){clearInterval(timer);timer=null;playBtn.innerHTML=I.play+'Putar otomatis'}
+  function go(n,keep){
+    if(!keep&&timer&&n!==i+1)stop();
+    i=Math.max(0,Math.min(steps.length-1,n));
+    const s=steps[i];
+    scr.className='screen'+(s.light?' light':'');
+    scr.innerHTML=s.screen();
+    $$('[data-next-hit]',scr).forEach(el=>{el.addEventListener('click',()=>go(i+1))});
+    $('[data-cur]',root).textContent=i+1;
+    $('[data-kicker]',root).textContent=s.kicker||('Langkah '+(i+1));
+    $('[data-title]',root).textContent=s.title;
+    $('[data-desc]',root).innerHTML=s.desc;
+    $('[data-tip]',root).innerHTML=s.tip?callout('tip','Tips',s.tip):'';
+    $('[data-prev]',root).disabled=i===0;
+    $('[data-next]',root).disabled=i===steps.length-1;
+    dots.innerHTML=steps.map((_,k)=>`<button class="dot ${k<i?'done':''} ${k===i?'cur':''}" data-d="${k}" aria-label="Ke langkah ${k+1}" ${k===i?'aria-current="step"':''}></button>`).join('');
+    if(i===steps.length-1&&timer)stop();
+  }
+  root.addEventListener('click',e=>{
+    const t=e.target.closest('button');if(!t)return;
+    if(t.dataset.d!==undefined)go(+t.dataset.d);
+    else if(t.hasAttribute('data-prev'))go(i-1);
+    else if(t.hasAttribute('data-next'))go(i+1);
+    else if(t.hasAttribute('data-reset')){stop();go(0)}
+    else if(t.hasAttribute('data-play')){
+      if(timer){stop();return}
+      if(i===steps.length-1)go(0,true);
+      playBtn.innerHTML=I.pause+'Jeda';
+      timer=setInterval(()=>go(i+1,true),steps[i].dur||4600);
+    }else if(t.dataset.tab!==undefined&&cfg.onTab){stop();cfg.onTab(+t.dataset.tab)}
+  });
+  cleanups.push(stop);
+  go(0);
+}
+
+/* ====== Kuis ====== */
+function mountQuiz(el,key,qs){
+  const L='ABCDE';
+  let order,idx,score,missed;
+  const bestKey='ri:best:'+key;
+  function start(){order=shuffle(qs.map((_,i)=>i));idx=0;score=0;missed=[];draw()}
+  function draw(){
+    if(idx>=order.length)return done();
+    const q=qs[order[idx]];
+    const opts=shuffle(q.o.map((t,i)=>({t,ok:i===q.a})));
+    el.innerHTML=`<div class="quiz">
+      <div class="q-top"><div class="q-prog" role="progressbar" aria-valuemin="0" aria-valuemax="${qs.length}" aria-valuenow="${idx}"><i style="width:${idx/qs.length*100}%"></i></div><span>Soal ${idx+1} dari ${qs.length}</span></div>
+      <div class="q-text">${q.q}</div>
+      <div class="q-opts" role="group" aria-label="Pilihan jawaban">${opts.map((o,k)=>`<button class="q-opt" data-k="${k}" type="button"><span class="l">${L[k]}</span><span>${o.t}</span></button>`).join('')}</div>
+      <div class="q-fb" aria-live="polite"></div><div class="q-next"></div></div>`;
+    $$('.q-opt',el).forEach(b=>b.addEventListener('click',()=>{
+      const k=+b.dataset.k,ok=opts[k].ok;
+      $$('.q-opt',el).forEach((x,j)=>{x.disabled=true;if(opts[j].ok)x.classList.add('ok')});
+      if(!ok)b.classList.add('no');
+      if(ok)score++;else missed.push(q);
+      $('.q-fb',el).innerHTML=callout(ok?'tip':'warn',ok?'Tepat!':'Belum tepat',q.e);
+      const last=idx===order.length-1;
+      $('.q-next',el).innerHTML=`<button class="btn primary" type="button">${last?'Lihat hasil':'Soal berikutnya'}${I.arrow}</button>`;
+      const nb=$('.q-next .btn',el);nb.addEventListener('click',()=>{idx++;draw();el.scrollIntoView({block:'nearest'})});nb.focus({preventScroll:true});
+    }));
+  }
+  function done(){
+    const pct=Math.round(score/qs.length*100);
+    const prev=parseInt(store.get(bestKey)||'-1',10);
+    if(pct>prev)store.set(bestKey,String(pct));
+    const msg=pct===100?'Sempurna. Semua jawaban benar.':pct>=75?'Bagus. Pemahamanmu sudah kuat.':pct>=50?'Cukup baik. Baca ulang materi yang masih keliru.':'Ayo pelajari lagi animasinya, lalu coba ulang.';
+    el.innerHTML=`<div class="quiz q-res">
+      <div class="q-score"><div class="ring" style="--p:${pct}"><div>${pct}</div></div>
+        <div><h3>${score} dari ${qs.length} soal benar</h3><p>${msg}</p></div></div>
+      ${missed.length?`<div><h4 style="font-size:17px;margin-bottom:10px">Yang perlu diulang</h4><div class="review">${missed.map(q=>`<div class="tcard"><b>${q.q}</b><p>Jawaban benar: ${q.o[q.a]}</p><p>${q.e}</p></div>`).join('')}</div></div>`:''}
+      <div><button class="btn primary" type="button">${I.reset}Ulangi latihan</button></div></div>`;
+    $('.btn',el).addEventListener('click',start);
+  }
+  start();
+}
+
+/* ====== Router ====== */
+const routes={};
+const app=$('#app');
+function pager(prev,next){
+  return `<div class="wrap"><div class="pager">${prev?`<a href="#${prev[0]}"><small>Sebelumnya</small><b>${prev[1]}</b></a>`:'<span></span>'}${next?`<a class="next" href="#${next[0]}"><small>Berikutnya</small><b>${next[1]}</b></a>`:''}</div></div>`;
+}
+function route(){
+  const id=cur;
+  const key=routes[id]?id:'beranda';
+  cleanups.splice(0).forEach(f=>{try{f()}catch(e){}});
+  const r=routes[key];
+  app.innerHTML=r.html();
+  if(r.mount)r.mount();
+  $$('#nav a').forEach(a=>{if(a.dataset.r===key)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')});
+  $('#nav').classList.remove('open');$('#menuBtn').setAttribute('aria-expanded','false');$('#menuBtn').innerHTML=I.menu;
+  window.scrollTo(0,0);
+  if(r.lesson)bindToc();
+}
+function bindToc(){
+  const btns=$$('.toc button');
+  btns.forEach(b=>b.addEventListener('click',()=>{const t=document.getElementById(b.dataset.go);if(t)t.scrollIntoView({behavior:'smooth',block:'start'})}));
+  const secs=btns.map(b=>document.getElementById(b.dataset.go)).filter(Boolean);
+  const onScroll=()=>{
+    let cur=secs[0];secs.forEach(s=>{if(s.getBoundingClientRect().top<160)cur=s});
+    btns.forEach(b=>b.classList.toggle('on',cur&&b.dataset.go===cur.id));
+  };
+  window.addEventListener('scroll',onScroll,{passive:true});cleanups.push(()=>window.removeEventListener('scroll',onScroll));onScroll();
+}
+function lessonShell(o){
+  return `<div class="${o.cls}">
+  <div class="wrap l-head"><div class="crumbs"><a href="#beranda">Beranda</a><span>/</span><span>Pertemuan ${o.n}</span></div>
+    <div class="l-title"><span class="tag">Pertemuan ${o.n} dari 3</span><h1>${o.title}</h1><p>${o.lead}</p>
+      <div class="hero-meta" style="margin:4px 0 0"><span class="chip">${I.clock}±${o.minutes} menit</span><span class="chip">${I.film}Animasi interaktif</span><span class="chip">${I.quiz}${o.nq} soal latihan</span></div></div></div>
+  <div class="wrap l-layout">
+    <nav class="toc" aria-label="Isi pertemuan"><span class="eyebrow">Isi pertemuan</span>${o.toc.map(t=>`<button type="button" data-go="${t[0]}">${t[1]}</button>`).join('')}</nav>
+    <div class="l-body">${o.body}</div>
+  </div></div>`;
+}
+
+/* ====== Tema & menu ====== */
+const root=document.documentElement;
+function isDark(){const t=root.getAttribute('data-theme');return t?t==='dark':matchMedia('(prefers-color-scheme: dark)').matches}
+function paintTheme(){$('#themeBtn').innerHTML=isDark()?I.sun:I.moon}
+const saved=store.get('ri:theme');if(saved)root.setAttribute('data-theme',saved);
+$('#themeBtn').addEventListener('click',()=>{const n=isDark()?'light':'dark';root.setAttribute('data-theme',n);store.set('ri:theme',n);paintTheme()});
+paintTheme();
+$('#menuBtn').innerHTML=I.menu;
+$('#menuBtn').addEventListener('click',()=>{const o=$('#nav').classList.toggle('open');$('#menuBtn').setAttribute('aria-expanded',String(o));$('#menuBtn').innerHTML=o?I.close:I.menu});
+let cur=(location.hash||'').slice(1);
+window.addEventListener('hashchange',()=>{cur=(location.hash||'').slice(1);route()});
+document.addEventListener('click',e=>{const a=e.target.closest('a[href^="#"]');if(!a)return;e.preventDefault();cur=a.getAttribute('href').slice(1);try{history.replaceState(null,'','#'+cur)}catch(_){}route()});
+
+/* ====== Beranda ====== */
+const M=[
+ {id:'pertemuan-1',n:1,cls:'h1c',title:'Instalasi Windows',desc:'Dari membuat flashdisk bootable sampai desktop pertama muncul. Ikuti setiap layar pemasangan lewat simulasi.',nq:8,min:90,art:'usb'},
+ {id:'pertemuan-2',n:2,cls:'h2c',title:'Instalasi Driver',desc:'Cara menemukan perangkat yang belum punya driver, lalu memasangnya secara online maupun offline.',nq:8,min:90,art:'chip'},
+ {id:'pertemuan-3',n:3,cls:'h3c',title:'Instalasi Aplikasi',desc:'Pasang aplikasi standar: WinRAR, Microsoft Office, dan browser Google Chrome, lengkap dengan langkah aman.',nq:9,min:90,art:'app'}
+];
+const ART={
+ usb:`<svg viewBox="0 0 240 140" role="img" aria-label="Flashdisk dimasukkan ke laptop dan bilah kemajuan terisi"><rect x="92" y="22" width="120" height="78" rx="8" class="ca-fill"/><rect x="100" y="30" width="104" height="62" rx="3" class="ca-scr"/><rect x="112" y="68" width="80" height="8" rx="4" fill="#2B5A8C" opacity=".6"/><rect x="112" y="68" width="80" height="8" rx="4" class="pg"/><text x="112" y="56" fill="#EAF2FB" font-family="JetBrains Mono,monospace" font-size="9">Installing…</text><path d="M78 108h148l-8 10H86z" class="ca-fill"/><g class="usb"><rect x="22" y="58" width="46" height="24" rx="4" class="ca-fill"/><rect x="68" y="64" width="14" height="12" rx="2" class="ca-hue"/><rect x="30" y="66" width="16" height="8" rx="2" class="ca-hue" opacity=".35"/></g></svg>`,
+ chip:`<svg viewBox="0 0 240 140" role="img" aria-label="Chip perangkat dengan tanda peringatan yang berubah menjadi centang"><g class="ca-line"><path d="M96 38v-14M112 38v-14M128 38v-14M144 38v-14M96 102v14M112 102v14M128 102v14M144 102v14M80 54H66M80 70H66M80 86H66M160 54h14M160 70h14M160 86h14"/></g><rect x="80" y="38" width="80" height="64" rx="8" class="ca-fill"/><rect x="96" y="54" width="48" height="32" rx="4" class="ca-hue" opacity=".22"/><text x="120" y="75" text-anchor="middle" fill="currentColor" font-family="JetBrains Mono,monospace" font-size="11" style="fill:var(--hue)">DRV</text><g transform="translate(172 22)"><g class="warn-g"><circle cx="18" cy="18" r="18" fill="#F59E0B"/><path d="M18 9v11M18 25v.01" stroke="#1B1200" stroke-width="3.2" stroke-linecap="round"/></g><g class="ok-g"><circle cx="18" cy="18" r="18" fill="#22C55E"/><path d="M10 18.5l6 6 11-12" stroke="#04210F" stroke-width="3.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g></g></svg>`,
+ app:`<svg viewBox="0 0 240 140" role="img" aria-label="Jendela aplikasi dengan tiga ikon aplikasi yang muncul dan panah unduh"><rect x="50" y="34" width="140" height="92" rx="8" class="ca-fill"/><path d="M50 52h140" class="ca-line"/><circle cx="62" cy="43" r="3" class="ca-hue"/><circle cx="73" cy="43" r="3" fill="var(--muted)" opacity=".5"/><rect x="66" y="66" width="30" height="30" rx="8" fill="#60A5FA" class="tile"/><rect x="105" y="66" width="30" height="30" rx="8" fill="#2DD4BF" class="tile t2"/><rect x="144" y="66" width="30" height="30" rx="8" fill="#FBBF24" class="tile t3"/><rect x="66" y="104" width="108" height="6" rx="3" fill="var(--line)"/><g class="dl"><path d="M120 4v16M112 13l8 8 8-8" class="ca-hue-s"/></g></svg>`
+};
+function homeHtml(){
+  const best=k=>{const v=store.get('ri:best:'+k);return v!==null?`<span class="score-pill">Skor terbaik ${v}</span>`:''};
+  return `
+  <section class="hero"><div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow">Informatika · Kelas X · ${SEKOLAH.nama}</span>
+      <h1>Pasang sistem, driver, dan aplikasi dengan <em>benar</em>.</h1>
+      <p class="lead">Tiga pertemuan praktik perangkat lunak komputer. Tiap materi punya animasi langkah demi langkah dan latihan soal untuk menguji pemahamanmu.</p>
+      <div class="hero-cta"><a class="btn primary" href="#pertemuan-1">Mulai Pertemuan 1${I.arrow}</a><a class="btn" href="#kelompok-acak">${I.users}Buat kelompok acak</a></div>
+      <div class="hero-meta"><span class="chip">3 pertemuan</span><span class="chip">3 animasi simulasi</span><span class="chip">25 soal latihan</span></div>
+    </div>
+    <svg class="hero-art" viewBox="0 0 520 380" role="img" aria-label="Laptop yang memasang Windows, driver, dan aplikasi secara bergiliran">
+      <rect x="70" y="40" width="380" height="240" rx="16" class="ha-bezel"/><rect x="86" y="56" width="348" height="208" rx="8" class="ha-screen"/>
+      <path d="M36 296h448l-26 34H62z" class="ha-base"/><rect x="214" y="296" width="92" height="8" rx="4" class="ha-notch" opacity=".35"/>
+      <text x="110" y="92" class="ha-txt" opacity=".7">setup.exe</text>
+      <g><text x="110" y="136" class="ha-txt">1 · Windows</text><rect x="110" y="146" width="270" height="10" rx="5" class="ha-track"/><rect x="110" y="146" width="270" height="10" rx="5" class="ha-fill f1"/><path d="M398 151l6 6 11-12" class="ha-ok o1"/></g>
+      <g><text x="110" y="188" class="ha-txt">2 · Driver</text><rect x="110" y="198" width="270" height="10" rx="5" class="ha-track"/><rect x="110" y="198" width="270" height="10" rx="5" class="ha-fill f2"/><path d="M398 203l6 6 11-12" class="ha-ok o2"/></g>
+      <g><text x="110" y="240" class="ha-txt">3 · Aplikasi</text><rect x="110" y="250" width="270" height="10" rx="5" class="ha-track"/><rect x="110" y="250" width="270" height="10" rx="5" class="ha-fill f3"/><path d="M398 255l6 6 11-12" class="ha-ok o3"/></g>
+      <g class="ha-chip"><rect x="14" y="70" width="74" height="30" rx="15"/><text x="51" y="90" text-anchor="middle">.iso</text></g>
+      <g class="ha-chip b2"><rect x="436" y="120" width="74" height="30" rx="15"/><text x="473" y="140" text-anchor="middle">driver</text></g>
+      <g class="ha-chip b3"><rect x="418" y="226" width="74" height="30" rx="15"/><text x="455" y="246" text-anchor="middle">.exe</text></g>
+    </svg>
+  </div></section>
+
+  <section class="section"><div class="wrap">
+    <div class="section-head"><span class="eyebrow">Materi</span><h2>Tiga pertemuan, satu alur kerja</h2><p>Mulai dari memasang sistem operasi, melengkapi driver perangkat keras, lalu memasang aplikasi yang dibutuhkan sehari-hari. Klik kartu untuk membuka materi lengkap.</p></div>
+    <div class="cards">${M.map(m=>`
+      <a class="pcard ${m.cls}" href="#${m.id}"><div class="art">${ART[m.art]}</div>
+        <div class="body"><span class="tag">Pertemuan ${m.n}</span><h3>${m.title}</h3><p>${m.desc}</p>
+          <div class="meta"><span class="chip">${I.clock}${m.min} menit</span><span class="chip">${I.quiz}${m.nq} soal</span>${best(m.id)}</div>
+          <div class="go"><span>Buka materi</span>${I.arrow}</div></div></a>`).join('')}
+    </div>
+  </div></section>
+
+  <section class="section" style="padding-top:8px"><div class="wrap">
+    <div class="section-head"><span class="eyebrow">Identitas</span><h2>Sekolah dan guru pengampu</h2></div>
+    <div class="id-grid">
+      <div class="idcard"><div class="avatar" aria-hidden="true">IT</div><div><h3>${SEKOLAH.nama}</h3>
+        <dl><dt>Mata pelajaran</dt><dd>${SEKOLAH.mapel}</dd><dt>Kelas</dt><dd>${SEKOLAH.kelas}</dd><dt>Topik</dt><dd>Instalasi perangkat lunak</dd></dl></div></div>
+      <div class="idcard"><div class="avatar t" aria-hidden="true">${initials(GURU.nama.split(",")[0])}</div><div><h3>${GURU.nama}</h3>
+        <dl><dt>Jabatan</dt><dd>${GURU.jabatan}</dd><dt>Kontak</dt><dd>${GURU.kontak}</dd></dl></div></div>
+    </div>
+  </div></section>
+
+  <section class="section" style="padding-top:0"><div class="wrap">
+    <div class="cta-band"><div><h3>Waktunya kerja kelompok?</h3><p>Masukkan daftar nama siswa, tentukan jumlah kelompok, dan biarkan acak yang memilih.</p></div>
+      <a class="btn" href="#kelompok-acak">${I.shuffle}Buat kelompok acak</a></div>
+  </div></section>`;
+}
+routes['beranda']={html:homeHtml};
+
+/* ====================================================================
+   PERTEMUAN 1 — INSTALASI WINDOWS
+   ==================================================================== */
+const winSteps=[
+ {title:'Boot dari flashdisk',kicker:'Langkah 1 · Boot',
+  desc:'Colok flashdisk bootable, nyalakan komputer, lalu tekan tombol <b>boot menu</b> berulang kali saat logo produsen muncul. Pilih flashdisk dengan tanda panah dan tekan <kbd>Enter</kbd>.',
+  tip:'Klik bagian yang berkedip kuning pada layar untuk melanjutkan. Tombol boot menu berbeda tiap merek (lihat tabel di bagian Persiapan).',
+  screen:()=>`<div class="pad"><div class="s-sub mono">Boot Menu · pilih perangkat lalu tekan Enter</div><div class="s-list"><div class="s-item dim">Windows Boot Manager (SSD)</div><div class="s-item sel hit" data-next-hit>UEFI: USB Flash Drive 16 GB</div><div class="s-item dim">Network Boot (PXE)</div></div><div class="s-foot"><span class="s-sub mono">F12 / Esc / F9</span></div></div>`},
+ {title:'Pilih bahasa dan keyboard',kicker:'Langkah 2 · Windows Setup',
+  desc:'Layar <b>Windows Setup</b> pertama meminta bahasa instalasi, format waktu dan mata uang, serta jenis keyboard. Pilih <i>Indonesian (Indonesia)</i> untuk bahasa dan format, lalu klik <b>Next</b>.',
+  tip:'Bahasa instalasi bisa diubah nanti lewat Settings, jadi tidak perlu khawatir salah pilih.',
+  screen:()=>`<div class="pad"><div class="s-title">Windows Setup</div><div class="s-field"><span>Language to install:</span><div class="s-box">Indonesian (Indonesia)</div></div><div class="s-field"><span>Time and currency format:</span><div class="s-box">Indonesian (Indonesia)</div></div><div class="s-field"><span>Keyboard or input method:</span><div class="s-box">US</div></div><div class="s-foot"><span class="s-btn hit" data-next-hit>Next</span></div></div>`},
+ {title:'Klik Install now',kicker:'Langkah 3 · Mulai instalasi',
+  desc:'Tombol besar <b>Install now</b> memulai proses. Tautan <i>Repair your computer</i> di pojok kiri bawah dipakai untuk memperbaiki Windows yang rusak, bukan untuk instalasi baru.',
+  screen:()=>`<div class="pad" style="align-items:center;justify-content:center;gap:1.6em"><div class="s-title">Windows Setup</div><div class="s-big hit" data-next-hit>Install now</div><div class="s-sub" style="margin-top:auto;align-self:flex-start;text-decoration:underline">Repair your computer</div></div>`},
+ {title:'Product key dan edisi',kicker:'Langkah 4 · Aktivasi',
+  desc:'Jika belum punya kunci produk, pilih <b>I don\'t have a product key</b>. Windows tetap terpasang dan dapat diaktivasi nanti. Setelah itu pilih edisi (misalnya Windows 11 Pro) dan setujui syarat lisensi.',
+  tip:'Perangkat yang sebelumnya sudah memakai Windows asli biasanya teraktivasi otomatis saat tersambung internet.',
+  screen:()=>`<div class="pad"><div class="s-title">Activate Windows</div><div class="s-sub">Enter the product key. It should be in an email or on the packaging.</div><div class="s-box mono" style="width:68%">XXXXX-XXXXX-XXXXX-XXXXX-XXXXX</div><div class="s-sub hit" data-next-hit style="align-self:flex-start;text-decoration:underline">I don't have a product key</div><div class="s-foot"><span class="s-btn ghost">Back</span><span class="s-btn" style="opacity:.6">Next</span></div></div>`},
+ {title:'Pilih tipe instalasi',kicker:'Langkah 5 · Custom',
+  desc:'Pilih <b>Custom: Install Windows only (advanced)</b> untuk instalasi bersih. Pilihan <i>Upgrade</i> hanya bisa dipakai jika setup dijalankan dari dalam Windows lama, bukan dari boot flashdisk.',
+  screen:()=>`<div class="pad"><div class="s-title">Which type of installation do you want?</div><div class="s-opt" style="opacity:.5"><b>Upgrade: Install Windows and keep files, settings, and applications</b><small>Hanya aktif jika setup dibuka dari Windows lama.</small></div><div class="s-opt hit" data-next-hit><b>Custom: Install Windows only (advanced)</b><small>Instalasi bersih. Kamu mengatur partisi sendiri.</small></div></div>`},
+ {title:'Atur partisi',kicker:'Langkah 6 · Penyimpanan',
+  desc:'Pilih tempat Windows dipasang. Untuk SSD baru, pilih <b>Unallocated Space</b> lalu klik Next, Windows membuat partisi yang dibutuhkan sendiri. Untuk disk lama, hapus (<i>Delete</i>) partisi sistem yang lama terlebih dahulu.',
+  tip:'Menghapus partisi menghapus semua data di dalamnya. Pastikan backup sudah aman dan pilih Drive yang benar.',
+  screen:()=>`<div class="pad"><div class="s-title">Where do you want to install Windows?</div><div class="s-tbl"><div class="s-tr hd"><span>Name</span><span>Total size</span><span>Free space</span></div><div class="s-tr sel"><span>Drive 0 Unallocated Space</span><span>476.9 GB</span><span>476.9 GB</span></div></div><div class="s-sub">Refresh · Delete · Format · New · Load driver</div><div class="s-foot"><span class="s-btn hit" data-next-hit>Next</span></div></div>`},
+ {title:'Proses penyalinan file',kicker:'Langkah 7 · Installing',
+  desc:'Windows menyalin file, memasang fitur, dan menginstal pembaruan. Komputer <b>restart beberapa kali</b>. Saat restart pertama, cabut flashdisk agar komputer tidak masuk ke setup lagi.',
+  tip:'Jangan mematikan komputer selama tahap ini. Pada laptop, pastikan charger terpasang.',dur:5200,
+  screen:()=>`<div class="pad"><div class="s-title">Installing Windows</div><div class="s-check"><i class="ok"></i>Copying Windows files</div><div class="s-check"><i class="ok"></i>Getting files ready for installation</div><div class="s-check"><i class="run"></i>Installing features</div><div class="s-check" style="opacity:.55"><i></i>Installing updates</div><div class="s-check" style="opacity:.55"><i></i>Finishing up</div><div class="s-bar" style="margin-top:auto"><i></i></div><div class="s-sub">Your PC will restart several times. This might take a while.</div></div>`},
+ {title:'Pengaturan awal (OOBE)',kicker:'Langkah 8 · Out-of-box experience',
+  desc:'Setelah restart, Windows menanyakan negara atau wilayah, tata letak keyboard, koneksi jaringan, nama akun, dan pengaturan privasi. Pilih <b>Indonesia</b> lalu <b>Yes</b>.',
+  tip:'Jika belum ada driver Wi-Fi, lewati langkah jaringan dulu. Driver dibahas di Pertemuan 2.',
+  screen:()=>`<div class="pad"><div class="s-title">Is this the right country or region?</div><div class="s-list" style="width:62%"><div class="s-item dim">Singapura</div><div class="s-item sel">Indonesia</div><div class="s-item dim">Malaysia</div></div><div class="s-sub">Berikutnya: keyboard → jaringan → akun → privasi</div><div class="s-foot"><span class="s-btn hit" data-next-hit>Yes</span></div></div>`},
+ {title:'Desktop siap dipakai',kicker:'Langkah 9 · Selesai',
+  desc:'Desktop muncul dan Windows siap dipakai. Pekerjaan berikutnya: periksa Windows Update, lalu pasang driver yang belum ada (Pertemuan 2) dan aplikasi yang dibutuhkan (Pertemuan 3).',
+  screen:()=>`<div class="s-desk"><div class="s-welcome"><b>Instalasi selesai</b><span>Windows siap dipakai</span></div></div><div class="s-task"><span class="sq"><i></i><i></i><i></i><i></i></span><small>07.30</small></div>`}
+];
+const Q1=[
+ {q:'Apa fungsi utama sistem operasi seperti Windows?',o:['Mengelola perangkat keras dan menjalankan aplikasi','Hanya menampilkan gambar di layar','Menyimpan data di internet','Mempercepat koneksi Wi-Fi'],a:0,e:'Sistem operasi menjadi perantara antara pengguna, aplikasi, dan perangkat keras, termasuk memori, penyimpanan, dan perangkat input/output.'},
+ {q:'Langkah apa yang <b>wajib</b> dilakukan sebelum instalasi bersih pada komputer yang berisi data penting?',o:['Mencabut kabel monitor','Membackup data penting ke tempat lain','Mengganti RAM','Menghapus BIOS'],a:1,e:'Instalasi bersih dan penghapusan partisi menghilangkan data. Backup ke flashdisk, hard disk eksternal, atau penyimpanan cloud dilakukan lebih dulu.'},
+ {q:'Apa fungsi <b>boot menu</b> saat komputer dinyalakan?',o:['Memilih perangkat yang dipakai untuk memulai komputer, misalnya flashdisk','Mengatur kecerahan layar','Menghapus virus','Mengaktifkan Wi-Fi'],a:0,e:'Boot menu memungkinkan kita memilih perangkat boot satu kali, misalnya flashdisk berisi installer Windows, tanpa mengubah urutan boot permanen.'},
+ {q:'Komputer memakai firmware <b>UEFI</b>. Skema partisi yang sesuai adalah...',o:['FAT8','GPT','Dynamic RAM','ISO'],a:1,e:'UEFI berpasangan dengan GPT, sedangkan BIOS Legacy berpasangan dengan MBR. Ketidakcocokan keduanya memunculkan pesan "Windows cannot be installed to this disk".'},
+ {q:'Untuk instalasi bersih dari flashdisk, opsi yang dipilih pada layar tipe instalasi adalah...',o:['Upgrade: Install Windows and keep files','Custom: Install Windows only (advanced)','Repair your computer','Reset this PC'],a:1,e:'Custom memungkinkan kita mengatur partisi dan memasang Windows dari awal. Upgrade hanya tersedia bila setup dijalankan dari dalam Windows.'},
+ {q:'Mengapa flashdisk sebaiknya dicabut saat komputer restart pertama kali selama instalasi?',o:['Agar flashdisk tidak panas','Agar komputer tidak boot ulang ke installer dan mengulang proses','Agar Windows lebih cepat terinstal','Agar product key terisi otomatis'],a:1,e:'Jika flashdisk masih menjadi prioritas boot, komputer bisa kembali ke layar Windows Setup alih-alih melanjutkan ke tahap konfigurasi.'},
+ {q:'Syarat Windows 11 yang <b>tidak</b> diwajibkan pada Windows 10 adalah...',o:['Layar berwarna','TPM 2.0 dan Secure Boot','Mouse','Kabel LAN'],a:1,e:'Windows 11 mensyaratkan firmware UEFI dengan Secure Boot dan chip TPM 2.0. Ini alasan banyak komputer lama tidak bisa memasang Windows 11.'},
+ {q:'Urutan yang <b>benar</b> dalam instalasi Windows dari flashdisk adalah...',o:['Pilih partisi → boot flashdisk → pilih bahasa → pengaturan awal','Boot flashdisk → pilih bahasa → Install now → pilih partisi → penyalinan file → pengaturan awal','Pengaturan awal → boot flashdisk → Install now → pilih partisi','Install now → pengaturan awal → pilih bahasa → boot flashdisk'],a:1,e:'Alurnya: boot dari flashdisk, bahasa, Install now, product key, tipe instalasi, partisi, penyalinan file dan restart, lalu pengaturan awal (OOBE) hingga desktop.'}
+];
+routes['pertemuan-1']={lesson:true,
+ html:()=>lessonShell({cls:'h1c',n:1,title:'Instalasi Windows',minutes:90,nq:Q1.length,
+  lead:'Memasang sistem operasi dari nol: menyiapkan media instalasi, masuk ke boot menu, mengatur partisi, sampai desktop pertama tampil.',
+  toc:[['p1-konsep','Konsep dasar'],['p1-persiapan','Persiapan'],['p1-animasi','Animasi instalasi'],['p1-masalah','Masalah umum'],['p1-latihan','Latihan soal']],
+  body:`
+  <section class="sec" id="p1-konsep"><div class="goals"><h3>Tujuan pembelajaran</h3><ul>
+    <li>${I.check}Menjelaskan fungsi sistem operasi dan perbedaan instalasi bersih dengan upgrade.</li>
+    <li>${I.check}Menyiapkan media instalasi dan mengakses boot menu.</li>
+    <li>${I.check}Menjalankan langkah instalasi Windows secara berurutan, termasuk mengatur partisi.</li></ul></div>
+    <h2 style="margin-top:36px">Konsep dasar</h2><p class="sub">Sebelum menekan tombol apa pun, pahami dulu apa yang sedang dipasang dan syarat apa yang harus dipenuhi.</p>
+    <div class="prose">
+      <p><b>Sistem operasi (OS)</b> adalah perangkat lunak utama yang mengatur perangkat keras dan menjalankan aplikasi. Contohnya Windows, macOS, Linux, dan Android. Tanpa OS, komputer hanya kumpulan komponen yang tidak bisa dipakai.</p>
+      <p><b>Instalasi bersih</b> (<i>clean install</i>) memasang OS di partisi yang sudah dikosongkan. Hasilnya bersih dari sisa program lama. <b>Upgrade</b> memperbarui OS lama sambil mempertahankan file dan aplikasi.</p>
+    </div>
+    <div class="grid2" style="margin-top:20px">
+      <div class="tcard"><h3>Windows 11</h3><p>Versi yang dianjurkan untuk perangkat yang memenuhi syarat. Mewajibkan UEFI, Secure Boot, dan TPM 2.0.</p></div>
+      <div class="tcard"><h3>Windows 10</h3><p>Dukungan resminya berakhir pada 14 Oktober 2025. Masih berguna dipelajari karena banyak komputer sekolah memakainya.</p></div>
+    </div>
+    <h3 style="font-size:18px;margin:26px 0 12px">Syarat minimum Windows 11</h3>
+    <div class="tbl"><table><thead><tr><th>Komponen</th><th>Syarat minimum</th></tr></thead><tbody>
+      <tr><td>Prosesor</td><td>1 GHz atau lebih, minimal 2 inti, 64-bit</td></tr>
+      <tr><td>RAM</td><td>4 GB</td></tr>
+      <tr><td>Penyimpanan</td><td>64 GB atau lebih</td></tr>
+      <tr><td>Firmware</td><td>UEFI dengan Secure Boot</td></tr>
+      <tr><td>Keamanan</td><td>TPM versi 2.0</td></tr>
+      <tr><td>Grafis</td><td>Kompatibel dengan DirectX 12 dan driver WDDM 2.0</td></tr></tbody></table></div>
+  </section>
+
+  <section class="sec" id="p1-persiapan"><h2>Persiapan</h2><p class="sub">Instalasi yang gagal biasanya bermula dari persiapan yang terlewat.</p>
+    <div class="grid3">
+      <div class="tcard"><span class="num">ALAT DAN BAHAN</span><h3>Yang disiapkan</h3><ul><li>Flashdisk minimal 8 GB</li><li>File ISO Windows resmi</li><li>Rufus atau Media Creation Tool</li><li>Charger (untuk laptop)</li></ul></div>
+      <div class="tcard"><span class="num">KEAMANAN DATA</span><h3>Backup dulu</h3><ul><li>Salin dokumen, foto, dan folder Desktop</li><li>Catat lisensi aplikasi berbayar</li><li>Simpan driver Wi-Fi/LAN di flashdisk lain</li></ul></div>
+      <div class="tcard"><span class="num">FIRMWARE</span><h3>Cek mode boot</h3><ul><li>UEFI memakai partisi GPT</li><li>BIOS Legacy memakai partisi MBR</li><li>Secure Boot dan TPM untuk Windows 11</li></ul></div>
+    </div>
+    <div style="margin-top:20px">${callout('warn','Isi flashdisk akan terhapus','<p>Rufus memformat flashdisk saat membuat media bootable. Pindahkan dulu file penting di dalamnya.</p>')}</div>
+    <h3 style="font-size:18px;margin:30px 0 14px">Membuat flashdisk bootable dengan Rufus</h3>
+    <ol class="steps">
+      <li><b>Unduh ISO</b><span>Ambil file ISO dari situs resmi Microsoft (microsoft.com/software-download). Hindari ISO dari situs tidak resmi.</span></li>
+      <li><b>Buka Rufus dan pilih flashdisk</b><span>Colok flashdisk, jalankan Rufus, lalu pastikan kolom <i>Device</i> menunjuk ke flashdisk yang benar.</span></li>
+      <li><b>Pilih file ISO</b><span>Pada <i>Boot selection</i> pilih <i>Disk or ISO image</i>, klik <b>SELECT</b>, lalu pilih file ISO Windows.</span></li>
+      <li><b>Sesuaikan skema partisi</b><span>Pilih <b>GPT</b> untuk komputer UEFI atau <b>MBR</b> untuk BIOS Legacy.</span></li>
+      <li><b>Klik START</b><span>Setujui peringatan format dan tunggu sampai status <i>READY</i>. Flashdisk siap dipakai.</span></li></ol>
+    <h3 style="font-size:18px;margin:30px 0 14px">Tombol boot menu dan BIOS menurut merek</h3>
+    <div class="tbl"><table><thead><tr><th>Merek</th><th>Boot menu</th><th>Masuk BIOS/UEFI</th></tr></thead><tbody>
+      <tr><td>Acer</td><td><kbd>F12</kbd></td><td><kbd>F2</kbd></td></tr>
+      <tr><td>ASUS</td><td><kbd>Esc</kbd> atau <kbd>F8</kbd></td><td><kbd>F2</kbd> atau <kbd>Del</kbd></td></tr>
+      <tr><td>Lenovo</td><td><kbd>F12</kbd></td><td><kbd>F1</kbd> atau <kbd>F2</kbd></td></tr>
+      <tr><td>HP</td><td><kbd>Esc</kbd> lalu <kbd>F9</kbd></td><td><kbd>F10</kbd></td></tr>
+      <tr><td>Dell</td><td><kbd>F12</kbd></td><td><kbd>F2</kbd></td></tr>
+      <tr><td>MSI</td><td><kbd>F11</kbd></td><td><kbd>Del</kbd></td></tr></tbody></table></div>
+    <p class="g-note" style="margin-top:10px">Tombol bisa berbeda antarmodel. Perhatikan teks kecil di layar saat logo produsen muncul.</p>
+  </section>
+
+  <section class="sec" id="p1-animasi"><h2>Animasi instalasi Windows</h2><p class="sub">Ikuti layar yang akan kamu temui saat instalasi. Klik bagian yang berkedip, atau pakai tombol di bawah layar.</p>
+    <div id="sim1"></div></section>
+
+  <section class="sec" id="p1-masalah"><h2>Masalah umum</h2><p class="sub">Empat masalah yang paling sering muncul di ruang praktik.</p>
+    <div class="grid2">
+      <div class="tcard"><h3>Flashdisk tidak muncul di boot menu</h3><p>Coba port USB lain (USB 2.0 sering lebih kompatibel), buat ulang media bootable, dan cek mode UEFI atau Legacy di BIOS.</p></div>
+      <div class="tcard"><h3>"Windows cannot be installed to this disk"</h3><p>Biasanya skema partisi tidak cocok dengan mode boot. UEFI butuh GPT, Legacy butuh MBR.</p></div>
+      <div class="tcard"><h3>Kembali ke layar setup setelah restart</h3><p>Cabut flashdisk, atau ubah urutan boot agar SSD/HDD berada di posisi pertama.</p></div>
+      <div class="tcard"><h3>Tidak ada Wi-Fi setelah instalasi</h3><p>Driver jaringan belum terpasang. Lanjutkan ke Pertemuan 2 untuk cara mengecek dan memasangnya.</p></div></div>
+  </section>
+
+  <section class="sec" id="p1-latihan"><h2>Latihan soal</h2><p class="sub">${Q1.length} soal pilihan ganda. Setiap jawaban langsung diberi penjelasan.</p><div id="quiz1"></div></section>`})+pager(null,['pertemuan-2','Pertemuan 2 · Instalasi Driver']),
+ mount:()=>{mountStepper($('#sim1'),{title:'Simulasi instalasi Windows dari flashdisk',steps:winSteps});mountQuiz($('#quiz1'),'pertemuan-1',Q1)}
+};
+
+/* ====================================================================
+   PERTEMUAN 2 — INSTALASI DRIVER
+   ==================================================================== */
+const dmTree=(rows,over='')=>`<div class="wnd"><div class="wnd-bar"><b>Device Manager</b><span class="ctl">— ▢ ✕</span></div><div class="wnd-menu"><span>File</span><span>Action</span><span>View</span><span>Help</span></div><div class="wnd-body">${rows}${over}</div></div>`;
+const tr=(t,o={})=>`<div class="tr ${o.cls||''}" ${o.hit?'data-next-hit':''}><span class="ic ${o.wi?'wi':''}">${o.ic||'▸'}</span>${t}</div>`;
+const baseRows=()=>tr('Audio inputs and outputs')+tr('Disk drives')+tr('Display adapters')+tr('Other devices',{ic:'▾'});
+const tailRows=()=>tr('Processors')+tr('System devices');
+const drvSteps=[
+ {title:'Temukan perangkat bertanda ⚠',kicker:'Langkah 1 · Device Manager',light:true,
+  desc:'Klik kanan tombol Start (atau tekan <kbd>Win</kbd>+<kbd>X</kbd>) lalu pilih <b>Device Manager</b>. Perangkat tanpa driver muncul di <i>Other devices</i> dengan tanda seru kuning. Di sini ada <b>Network Controller</b> yang belum punya driver.',
+  tip:'Klik baris Network Controller yang berkedip. Perintah <code>devmgmt.msc</code> di kotak Run (<kbd>Win</kbd>+<kbd>R</kbd>) juga membuka Device Manager.',
+  screen:()=>dmTree(baseRows()+tr('Network Controller',{cls:'l2 bad hit',hit:1,ic:'⚠',wi:1})+tailRows())},
+ {title:'Klik kanan, pilih Update driver',kicker:'Langkah 2 · Menu konteks',light:true,
+  desc:'Klik kanan perangkat bertanda ⚠. Menu konteks memuat <b>Update driver</b>, <i>Disable device</i>, <i>Uninstall device</i>, dan <i>Properties</i>. Pilih Update driver.',
+  tip:'Lewat <i>Properties → Details → Hardware Ids</i> kamu bisa melihat kode perangkat untuk mencari driver yang tepat.',
+  screen:()=>dmTree(baseRows()+tr('Network Controller',{cls:'l2 bad',ic:'⚠',wi:1})+tailRows(),`<div class="ctx"><div class="on hit" data-next-hit>Update driver</div><div>Disable device</div><div>Uninstall device</div><div class="sep"></div><div>Scan for hardware changes</div><div>Properties</div></div>`)},
+ {title:'Pilih cara mencari driver',kicker:'Langkah 3 · Online atau offline',light:true,
+  desc:'<b>Search automatically for drivers</b> memakai internet (online). <b>Browse my computer for drivers</b> dipakai jika file driver sudah ada di flashdisk atau folder (offline). Pilih salah satu untuk melihat prosesnya.',
+  tip:'Tidak ada internet karena driver Wi-Fi belum terpasang? Pakai jalur offline dengan driver dari flashdisk.',
+  screen:()=>dmTree(baseRows()+tr('Network Controller',{cls:'l2 bad',ic:'⚠',wi:1})+tailRows(),`<div class="dlg"><h5>Update Drivers · Network Controller</h5><div class="dbody"><div>How do you want to search for drivers?</div><div class="choice hit" data-next-hit><span class="tagm">ONLINE</span><b>Search automatically for drivers</b><small>Windows mencari di komputer dan internet.</small></div><div class="choice hit" data-next-hit><span class="tagm">OFFLINE</span><b>Browse my computer for drivers</b><small>Pilih folder driver dari flashdisk atau hard disk.</small></div></div><div class="dfoot"><span class="dbtn">Cancel</span></div></div>`)},
+ {title:'Driver dipasang',kicker:'Langkah 4 · Proses instalasi',light:true,dur:5200,
+  desc:'Windows memasang file driver. Pada jalur offline, tunjuk folder driver dan centang <i>Include subfolders</i> agar semua berkas ikut terbaca. Layar bisa berkedip sebentar, itu normal.',
+  screen:()=>dmTree(baseRows()+tr('Network Controller',{cls:'l2 bad',ic:'⚠',wi:1})+tailRows(),`<div class="dlg"><h5>Update Drivers · Network Controller</h5><div class="dbody"><div>Installing driver software for your device…</div><div class="s-bar light" style="margin-top:.8em"><i></i></div><small style="color:#4A5560">Mohon tunggu, jangan matikan komputer.</small></div><div class="dfoot"><span class="dbtn">Cancel</span></div></div>`)},
+ {title:'Driver berhasil diperbarui',kicker:'Langkah 5 · Konfirmasi',light:true,
+  desc:'Pesan <i>Windows has successfully updated your drivers</i> menandakan driver terpasang. Klik <b>Close</b>. Bila diminta restart, lakukan restart agar driver bekerja penuh.',
+  screen:()=>dmTree(baseRows()+tr('Network Controller',{cls:'l2 bad',ic:'⚠',wi:1})+tailRows(),`<div class="dlg"><h5 style="color:#15803D">Windows has successfully updated your drivers</h5><div class="dbody"><div>Windows has finished installing the drivers for this device:</div><b>Intel(R) Wi-Fi 6 AX200 160MHz</b></div><div class="dfoot"><span class="dbtn def hit" data-next-hit>Close</span></div></div>`)},
+ {title:'Periksa hasilnya',kicker:'Langkah 6 · Verifikasi',light:true,
+  desc:'Kini perangkat berpindah ke <b>Network adapters</b> dengan nama yang benar dan tanpa tanda ⚠. Tes dengan menyambungkan Wi-Fi atau membuka halaman web.',
+  tip:'Jika tanda ⚠ masih ada, buka Properties dan baca pesan <i>Device status</i> (misalnya "Code 28") untuk petunjuk masalahnya.',
+  screen:()=>dmTree(tr('Audio inputs and outputs')+tr('Disk drives')+tr('Display adapters')+tr('Network adapters',{ic:'▾'})+tr('Intel(R) Wi-Fi 6 AX200 160MHz',{cls:'l2',ic:'✓'})+tr('Realtek PCIe GbE Family Controller',{cls:'l2',ic:'✓'})+tailRows())}
+];
+const Q2=[
+ {q:'Apa fungsi <b>driver</b> pada komputer?',o:['Menyimpan file dokumen','Menjadi penghubung agar sistem operasi dapat mengendalikan perangkat keras','Mempercepat internet','Mengganti sistem operasi'],a:1,e:'Driver adalah perangkat lunak kecil yang menerjemahkan perintah sistem operasi menjadi instruksi yang dimengerti perangkat keras seperti VGA, audio, atau Wi-Fi.'},
+ {q:'Tanda perangkat yang belum terpasang drivernya di Device Manager adalah...',o:['Ikon gembok hijau','Tanda seru kuning atau tulisan Unknown device','Ikon bintang','Teks berwarna merah di Desktop'],a:1,e:'Perangkat tanpa driver biasanya masuk kelompok "Other devices" dengan tanda seru kuning atau bernama Unknown device.'},
+ {q:'Perintah di kotak <b>Run</b> (Win+R) untuk membuka Device Manager adalah...',o:['dxdiag','services.msc','devmgmt.msc','msinfo32'],a:2,e:'devmgmt.msc membuka Device Manager. dxdiag menampilkan informasi DirectX, msinfo32 informasi sistem, dan services.msc daftar layanan.'},
+ {q:'<b>Hardware ID</b> (misalnya VEN_8086&DEV_2723) dipakai untuk...',o:['Mengunci komputer','Mengidentifikasi perangkat sehingga driver yang cocok dapat dicari','Mengecek suhu prosesor','Menghitung ukuran RAM'],a:1,e:'VEN adalah kode vendor dan DEV kode perangkat. Keduanya dicari di web untuk mengetahui jenis perangkat dan driver yang sesuai.'},
+ {q:'Setelah instalasi ulang Windows, Wi-Fi tidak berfungsi sehingga komputer tidak bisa online. Driver apa yang paling dulu disiapkan lewat flashdisk?',o:['Driver printer','Driver audio','Driver LAN atau Wi-Fi','Driver webcam'],a:2,e:'Driver jaringan harus ada lebih dulu agar komputer bisa online dan mengunduh driver lain lewat Windows Update atau situs produsen.'},
+ {q:'Sumber unduhan driver yang paling aman adalah...',o:['Situs resmi produsen laptop atau chip','Iklan pop-up "Update driver gratis"','Tautan dari grup chat tanpa sumber jelas','Situs berbagi file acak'],a:0,e:'Driver dari situs resmi terjamin keasliannya. Aplikasi pembaruan driver pihak ketiga dan situs tak dikenal berisiko membawa malware.'},
+ {q:'File driver sudah disalin ke flashdisk. Pilihan yang dipilih pada jendela Update Drivers adalah...',o:['Search automatically for drivers','Browse my computer for drivers','Disable device','Scan for hardware changes'],a:1,e:'Browse my computer for drivers dipakai untuk memasang driver dari folder atau flashdisk (jalur offline).'},
+ {q:'Perintah berikut yang dipakai untuk <b>mencadangkan</b> semua driver pihak ketiga sebelum instalasi ulang adalah...',o:['driverquery /reset','pnputil /export-driver * D:\\BackupDriver','format D: /driver','ipconfig /drivers'],a:1,e:'pnputil /export-driver mengekspor paket driver ke folder tujuan. Jalankan Command Prompt sebagai Administrator dan pastikan foldernya sudah dibuat.'}
+];
+routes['pertemuan-2']={lesson:true,
+ html:()=>lessonShell({cls:'h2c',n:2,title:'Instalasi Driver',minutes:90,nq:Q2.length,
+  lead:'Windows sudah terpasang, tetapi belum semua perangkat keras dikenali. Pelajari cara menemukan driver yang belum ada, lalu memasangnya secara online maupun offline.',
+  toc:[['p2-konsep','Konsep dasar'],['p2-cek','Cara cek driver'],['p2-animasi','Animasi instalasi'],['p2-unduh','Unduh dan pasang'],['p2-latihan','Latihan soal']],
+  body:`
+  <section class="sec" id="p2-konsep"><div class="goals"><h3>Tujuan pembelajaran</h3><ul>
+    <li>${I.check}Menjelaskan fungsi driver dan tanda-tanda driver belum terpasang.</li>
+    <li>${I.check}Mengecek driver yang belum terinstal lewat Device Manager dan Hardware ID.</li>
+    <li>${I.check}Mengunduh dan memasang driver secara online maupun offline.</li></ul></div>
+    <h2 style="margin-top:36px">Konsep dasar</h2><p class="sub">Driver membuat komponen komputer bisa "bicara" dengan Windows.</p>
+    <div class="prose"><p><b>Driver</b> adalah perangkat lunak yang menghubungkan sistem operasi dengan perangkat keras. Tanpa driver yang tepat, perangkat bisa tidak berfungsi atau bekerja tidak maksimal.</p></div>
+    <div class="grid3" style="margin-top:20px">
+      <div class="tcard"><h3>Chipset</h3><p>Mengatur komunikasi antar komponen di motherboard. Dipasang pertama.</p></div>
+      <div class="tcard"><h3>Grafis (VGA)</h3><p>Tanpa driver, resolusi layar rendah dan tampilan terlihat buram atau pecah.</p></div>
+      <div class="tcard"><h3>Audio</h3><p>Tanpa driver, tidak ada suara dari speaker atau headphone.</p></div>
+      <div class="tcard"><h3>LAN dan Wi-Fi</h3><p>Tanpa driver, jaringan tidak terdeteksi sehingga komputer tidak bisa online.</p></div>
+      <div class="tcard"><h3>Bluetooth</h3><p>Dibutuhkan untuk mouse, keyboard, dan headset nirkabel.</p></div>
+      <div class="tcard"><h3>Touchpad dan lainnya</h3><p>Gesture touchpad, kamera, dan tombol fungsi laptop.</p></div></div>
+  </section>
+
+  <section class="sec" id="p2-cek"><h2>Cara cek driver yang belum terinstal</h2><p class="sub">Empat cara, dari yang paling mudah sampai yang paling teknis.</p>
+    <div class="grid2">
+      <div class="tcard"><span class="num">CARA 1</span><h3>Device Manager</h3><ul><li>Tekan <kbd>Win</kbd>+<kbd>X</kbd>, pilih <b>Device Manager</b></li><li>Cari kelompok <i>Other devices</i> atau ikon ⚠</li><li>Klik kanan perangkat, buka <i>Properties</i> dan baca <i>Device status</i></li></ul></div>
+      <div class="tcard"><span class="num">CARA 2</span><h3>Hardware ID</h3><ul><li>Properties → tab <b>Details</b></li><li>Pada <i>Property</i> pilih <b>Hardware Ids</b></li><li>Salin nilai teratas, cari di mesin pencari</li></ul>
+        <pre class="code">PCI\\VEN_8086&amp;DEV_2723&amp;SUBSYS_00748086
+<span class="c">VEN_8086 = Intel · DEV_2723 = Wi-Fi 6 AX200</span></pre></div>
+      <div class="tcard"><span class="num">CARA 3</span><h3>Windows Update</h3><ul><li>Settings → Windows Update</li><li>Advanced options → <b>Optional updates</b></li><li>Centang <i>Driver updates</i> yang tersedia, lalu Download &amp; install</li></ul></div>
+      <div class="tcard"><span class="num">CARA 4</span><h3>Perintah teks</h3><p>Daftar perangkat bermasalah lewat PowerShell:</p>
+        <pre class="code">Get-PnpDevice -PresentOnly | Where-Object Status -ne 'OK'</pre><p>Daftar driver terpasang lewat Command Prompt:</p><pre class="code">driverquery /v</pre></div></div>
+    <div style="margin-top:20px">${callout('tip','Ketahui tipe perangkatmu','<p>Driver harus sesuai model. Lihat stiker di bagian bawah laptop, atau tekan <kbd>Win</kbd>+<kbd>R</kbd>, ketik <code>msinfo32</code>, lalu baca <i>System Model</i> dan <i>System Type</i> (32-bit atau 64-bit).</p>')}</div>
+  </section>
+
+  <section class="sec" id="p2-animasi"><h2>Animasi instalasi driver</h2><p class="sub">Simulasi memasang driver Wi-Fi lewat Device Manager. Klik bagian yang berkedip untuk melanjutkan.</p><div id="sim2"></div></section>
+
+  <section class="sec" id="p2-unduh"><h2>Mengunduh dan memasang driver</h2><p class="sub">Pilih jalur sesuai kondisi: komputer sudah online atau belum.</p>
+    <div class="grid2">
+      <div class="tcard"><span class="num">JALUR ONLINE</span><h3>Komputer sudah tersambung internet</h3><ol class="steps" style="margin-top:8px">
+        <li style="padding-bottom:14px"><b>Windows Update</b><span>Cek Optional updates. Cara paling cepat untuk driver umum.</span></li>
+        <li style="padding-bottom:14px"><b>Situs resmi produsen laptop</b><span>Buka halaman Support atau Drivers merek laptop, masukkan model, pilih versi Windows, lalu unduh.</span></li>
+        <li style="padding-bottom:14px"><b>Situs pembuat chip</b><span>Intel, AMD, NVIDIA, dan Realtek menyediakan driver terbaru untuk grafis, audio, dan jaringan.</span></li>
+        <li style="padding-bottom:0"><b>Aplikasi pembaruan resmi</b><span>Misalnya Intel Driver &amp; Support Assistant, MyASUS, Lenovo Vantage, HP Support Assistant, atau SupportAssist.</span></li></ol></div>
+      <div class="tcard"><span class="num">JALUR OFFLINE</span><h3>Komputer belum bisa online</h3><ol class="steps" style="margin-top:8px">
+        <li style="padding-bottom:14px"><b>Unduh di komputer lain</b><span>Pakai komputer yang online, unduh driver sesuai model dan versi Windows. Utamakan driver LAN/Wi-Fi.</span></li>
+        <li style="padding-bottom:14px"><b>Simpan ke flashdisk</b><span>Ekstrak file ZIP jika perlu, lalu salin foldernya ke flashdisk.</span></li>
+        <li style="padding-bottom:14px"><b>Pasang manual</b><span>Jalankan <code>setup.exe</code> di folder driver, atau Device Manager → Update driver → <i>Browse my computer</i> → pilih folder → Next.</span></li>
+        <li style="padding-bottom:0"><b>Pakai cadangan driver</b><span>Sebelum instalasi ulang, ekspor driver dengan perintah di bawah.</span></li></ol></div></div>
+    <pre class="code" style="margin-top:16px"><span class="c">:: Command Prompt (Run as administrator)</span>
+mkdir D:\\BackupDriver
+pnputil /export-driver * D:\\BackupDriver</pre>
+    <h3 style="font-size:18px;margin:30px 0 14px">Online dibandingkan offline</h3>
+    <div class="tbl"><table><thead><tr><th>Aspek</th><th>Online</th><th>Offline</th></tr></thead><tbody>
+      <tr><td>Internet</td><td>Wajib saat memasang</td><td>Hanya saat mengunduh di komputer lain</td></tr>
+      <tr><td>Kelebihan</td><td>Mudah dan versi terbaru</td><td>Bisa dipakai tanpa jaringan dan diulang di banyak komputer</td></tr>
+      <tr><td>Kekurangan</td><td>Perlu koneksi stabil</td><td>Harus menyiapkan file dan memilih versi yang tepat</td></tr>
+      <tr><td>Cocok untuk</td><td>Komputer yang sudah punya internet</td><td>Setelah instalasi ulang dan laboratorium sekolah</td></tr></tbody></table></div>
+    <div class="grid2" style="margin-top:20px">
+      ${callout('warn','Hati-hati sumber driver','<p>Unduh hanya dari situs resmi. Hindari aplikasi "driver updater" yang memunculkan iklan atau meminta pembayaran, karena sebagian membawa malware.</p>')}
+      ${callout('tip','Urutan pemasangan yang aman','<p>Chipset → grafis → audio → LAN/Wi-Fi → Bluetooth → lainnya. Restart bila diminta dan buat <i>restore point</i> sebelum mulai.</p>')}
+    </div>
+  </section>
+
+  <section class="sec" id="p2-latihan"><h2>Latihan soal</h2><p class="sub">${Q2.length} soal pilihan ganda dengan pembahasan.</p><div id="quiz2"></div></section>`})+pager(['pertemuan-1','Pertemuan 1 · Instalasi Windows'],['pertemuan-3','Pertemuan 3 · Instalasi Aplikasi']),
+ mount:()=>{mountStepper($('#sim2'),{title:'Simulasi memasang driver lewat Device Manager',steps:drvSteps});mountQuiz($('#quiz2'),'pertemuan-2',Q2)}
+};
+
+/* ====================================================================
+   PERTEMUAN 3 — INSTALASI APLIKASI
+   ==================================================================== */
+const APPS=[
+ {name:'WinRAR',g:'R',col:'#8E3B9E',site:'www.win-rar.com',label:'Unduh WinRAR',btn:'Download WinRAR 64-bit',file:'winrar-x64-xxx.exe',pub:'win.rar GmbH'},
+ {name:'Microsoft Office',g:'O',col:'#D9531E',site:'www.office.com',label:'Pasang Office',btn:'Install apps',file:'OfficeSetup.exe',pub:'Microsoft Corporation'},
+ {name:'Google Chrome',g:'C',col:'#2B7CD3',site:'www.google.com/chrome',label:'Browser yang cepat',btn:'Download Chrome',file:'ChromeSetup.exe',pub:'Google LLC'}
+];
+const gl=(a,s='')=>`<span class="gl" style="background:${a.col};${s}">${a.g}</span>`;
+const cb=(t,on)=>`<div class="cb"><i class="${on?'on':''}">${on?'✓':''}</i>${t}</div>`;
+const brw=(a,over='')=>`<div class="brw"><div class="addr"><span>https://${a.site}</span></div><div class="page">${gl(a,'width:3.2em;height:3.2em;font-size:1.3em')}<h6>${a.label}</h6><div class="dlbtn ${over?'':'hit'}" ${over?'':'data-next-hit'}>${a.btn}</div></div>${over}</div>`;
+const popup=a=>`<div class="pop"><b>Downloads</b><div class="fl hit" data-next-hit>${gl(a)}<div><div>${a.file}</div><small>Open file</small></div></div></div>`;
+const uac=a=>`<div class="s-desk" style="flex:1"></div><div class="uac"><div class="dlg"><div class="band">User Account Control</div><div class="dbody"><b>Do you want to allow this app to make changes to your device?</b><div style="display:flex;gap:.8em;align-items:center">${gl(a)}<div>${a.file}<br><small style="color:#4A5560">Verified publisher: ${a.pub}</small></div></div></div><div class="dfoot"><span class="dbtn def hit" data-next-hit>Yes</span><span class="dbtn">No</span></div></div></div>`;
+const setupWin=(a,title,body,foot)=>`<div class="s-desk" style="flex:1"></div><div class="setup"><div class="sb">${gl(a,'width:1.6em;height:1.6em;font-size:.9em')}<b>${title}</b></div><div class="sbody">${body}</div><div class="sfoot">${foot}</div></div>`;
+const prog=(msg,files)=>`<div>${msg}</div><div class="s-bar light" style="margin-top:.5em"><i></i></div><small style="color:#4A5560">${files}</small>`;
+const dl=a=>({kicker:'Langkah 1 · Unduh',title:'Unduh dari situs resmi',light:true,
+  desc:'Buka situs resmi (alamat di address bar) dan klik tombol unduh. Pilih versi yang cocok dengan Windows, misalnya <b>64-bit</b> untuk sistem 64-bit.',
+  tip:'Cek jenis sistem di Settings → System → About → <i>System type</i>. Klik tombol unduh yang berkedip.',screen:()=>brw(a)});
+const openF=a=>({kicker:'Langkah 2 · Jalankan',title:'Buka berkas installer',light:true,
+  desc:'Setelah selesai diunduh, buka berkas <code>'+a.file+'</code> dari popup unduhan atau folder <i>Downloads</i> dengan klik dua kali.',
+  screen:()=>brw(a,popup(a))});
+const uacS=a=>({kicker:'Langkah 3 · Izin',title:'Setujui jendela User Account Control',light:true,
+  desc:'Windows menanyakan izin. Periksa <b>Verified publisher</b>: nama penerbitnya harus sesuai ('+a.pub+'). Jika cocok, klik <b>Yes</b>.',
+  tip:'Jika penerbit tertulis "Unknown publisher" untuk aplikasi populer, hentikan dulu dan cek ulang sumber unduhan.',screen:()=>uac(a)});
+function appSteps(a){
+  if(a.name==='WinRAR')return [dl(a),openF(a),uacS(a),
+   {kicker:'Langkah 4 · Folder tujuan',title:'Pilih folder tujuan lalu Install',light:true,desc:'Folder bawaan <code>C:\\Program Files\\WinRAR</code> sudah tepat untuk kebanyakan pengguna. Klik <b>Install</b>.',screen:()=>setupWin(a,'WinRAR Setup',`<div>Destination folder</div><div class="fieldv">C:\\Program Files\\WinRAR</div><small style="color:#4A5560">Gunakan folder bawaan kecuali ada alasan khusus.</small>`,`<span class="dbtn def hit" data-next-hit>Install</span><span class="dbtn">Cancel</span>`)},
+   {kicker:'Langkah 5 · Menyalin file',title:'Tunggu proses selesai',light:true,dur:5000,desc:'Installer menyalin berkas program. Prosesnya hanya beberapa detik sampai menit.',screen:()=>setupWin(a,'WinRAR Setup',prog('Installing…','Copying: WinRAR.exe, Rar.exe, UnRAR.exe'),`<span class="dbtn">Cancel</span>`)},
+   {kicker:'Langkah 6 · Asosiasi file',title:'Pilih jenis berkas yang dibuka WinRAR',light:true,desc:'Centang format yang ingin dibuka otomatis dengan WinRAR, misalnya <b>RAR</b> dan <b>ZIP</b>. Aktifkan juga <i>Integrate WinRAR into shell</i> agar menu klik kanan tersedia, lalu klik <b>OK</b>.',screen:()=>setupWin(a,'WinRAR Setup · Associate',`<div>Associate WinRAR with:</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:.35em">${cb('RAR',1)}${cb('ZIP',1)}${cb('7z',0)}${cb('TAR',0)}</div>${cb('Integrate WinRAR into shell',1)}`,`<span class="dbtn def hit" data-next-hit>OK</span><span class="dbtn">Cancel</span>`)},
+   {kicker:'Langkah 7 · Selesai',title:'WinRAR siap dipakai',light:true,desc:'Klik <b>Done</b>. Untuk memakainya, klik kanan sebuah file atau folder lalu pilih <i>Add to archive</i> (mengompres) atau <i>Extract Here</i> (mengekstrak).',tip:'WinRAR adalah perangkat lunak berlisensi dengan masa percobaan. Alternatif gratis: 7-Zip.',screen:()=>setupWin(a,'WinRAR Setup',`<b style="font-size:1.25em;color:#15803D">✓ Installation complete</b><div>Klik kanan file → <b>Extract Here</b> atau <b>Add to archive…</b></div>`,`<span class="dbtn def">Done</span>`)}];
+  if(a.name==='Microsoft Office')return [dl(a),openF(a),uacS(a),
+   {kicker:'Langkah 4 · Mengunduh dan memasang',title:'Tunggu pemasangan Office',light:true,dur:5200,desc:'Installer jenis <i>Click-to-Run</i> mengunduh komponen Office lewat internet lalu memasangnya. Ukurannya besar, jadi butuh koneksi stabil dan beberapa menit.',tip:'Untuk banyak komputer atau tanpa internet, administrator memakai <b>Office Deployment Tool</b> untuk mengunduh paket sekali lalu memasangnya secara offline.',screen:()=>setupWin(a,'Office',prog('<b>Installing Office</b><br>Please wait while Office is downloaded and installed.','Jangan matikan komputer selama proses berjalan.'),`<span class="dbtn">Cancel</span>`)},
+   {kicker:'Langkah 5 · Selesai',title:'Office terpasang',light:true,desc:'Pesan <i>You\'re all set!</i> berarti pemasangan selesai. Word, Excel, dan PowerPoint kini tersedia di menu Start.',screen:()=>setupWin(a,'Office',`<b style="font-size:1.25em">You're all set! Office is installed now</b><div style="display:flex;gap:.6em">${gl({g:'W',col:'#2B579A'})}${gl({g:'X',col:'#217346'})}${gl({g:'P',col:'#C43E1C'})}</div><div>Cari <b>Word</b>, <b>Excel</b>, dan <b>PowerPoint</b> di menu Start.</div>`,`<span class="dbtn def hit" data-next-hit>Close</span>`)},
+   {kicker:'Langkah 6 · Aktivasi',title:'Masuk dengan akun berlisensi',light:true,desc:'Buka Word untuk pertama kali dan masuk dengan akun Microsoft yang memiliki lisensi, misalnya langganan Microsoft 365, pembelian Office, atau akun sekolah yang mendapat lisensi pendidikan.',tip:'Tidak punya lisensi? Gunakan Office versi web atau LibreOffice yang gratis.',screen:()=>setupWin(a,'Word · Sign in to get started',`<div>Masuk dengan akun Microsoft yang memiliki lisensi Office.</div><div class="fieldv">nama@contoh.sch.id</div>`,`<span class="dbtn def hit" data-next-hit>Sign in</span><span class="dbtn">Cancel</span>`)},
+   {kicker:'Langkah 7 · Terverifikasi',title:'Office teraktivasi',light:true,desc:'Status <i>Product Activated</i> muncul di <b>File → Account</b>. Office siap dipakai.',screen:()=>setupWin(a,'Word · Account',`<b style="font-size:1.25em;color:#15803D">✓ Product Activated</b><div>Lisensi aktif. Status bisa dicek kapan saja di File → Account.</div>`,`<span class="dbtn">Close</span>`)}];
+  return [dl(a),openF(a),uacS(a),
+   {kicker:'Langkah 4 · Pemasangan',title:'Chrome terpasang otomatis',light:true,dur:5000,desc:'<code>ChromeSetup.exe</code> adalah installer <i>online</i>: berkas kecil yang mengunduh Chrome terbaru saat dijalankan, jadi komputer harus tersambung internet.',tip:'Butuh installer offline (standalone) untuk komputer tanpa internet? Cari opsi "Chrome offline installer" di halaman resmi Google Chrome.',screen:()=>setupWin(a,'Google Chrome',prog('<b>Installing Google Chrome</b>','Downloading and installing…'),`<span class="dbtn">Cancel</span>`)},
+   {kicker:'Langkah 5 · Pertama dibuka',title:'Jadikan browser utama',light:true,desc:'Chrome terbuka otomatis. Klik <b>Set as default</b> bila ingin Chrome membuka tautan secara bawaan. Login akun Google bersifat opsional, gunanya menyinkronkan bookmark.',screen:()=>`<div class="brw"><div class="addr"><span>chrome://welcome</span></div><div class="page"><h6>Welcome to Chrome</h6><div>Jadikan Chrome browser utama?</div><div style="display:flex;gap:.8em;align-items:center"><div class="dlbtn hit" data-next-hit>Set as default</div><div class="dbtn">Skip</div></div></div></div>`},
+   {kicker:'Langkah 6 · Selesai',title:'Chrome siap dipakai',light:true,desc:'Ketik alamat situs atau kata kunci di <i>address bar</i>. Pembaruan Chrome berjalan otomatis di latar belakang.',tip:'Pengaturan lain ada di Settings → Apps → Default apps.',screen:()=>`<div class="brw"><div class="addr"><span>https://www.google.com</span></div><div class="page">${gl(a,'width:3.2em;height:3.2em;font-size:1.3em')}<h6>Chrome siap dipakai</h6><div>Ketik alamat atau kata kunci di address bar.</div></div></div>`}];
+}
+const Q3=[
+ {q:'Fungsi utama aplikasi <b>WinRAR</b> adalah...',o:['Mengedit video','Mengompres dan mengekstrak berkas','Memutar musik','Mengatur jaringan Wi-Fi'],a:1,e:'WinRAR mengemas banyak file menjadi satu arsip yang lebih kecil (RAR, ZIP) dan mengekstraknya kembali.'},
+ {q:'Ekstensi berkas installer aplikasi pada Windows yang paling umum adalah...',o:['.jpg dan .png','.exe dan .msi','.docx dan .xlsx','.mp3 dan .mp4'],a:1,e:'Installer Windows lazimnya berbentuk .exe atau .msi. Berkas lain seperti .jpg atau .docx bukan program.'},
+ {q:'Cara mengetahui Windows <b>32-bit atau 64-bit</b> sebelum mengunduh aplikasi adalah...',o:['Settings → System → About, lihat System type','Menekan tombol Caps Lock','Membuka Recycle Bin','Mengganti wallpaper'],a:0,e:'Halaman About memuat System type. Pilih installer yang sesuai agar aplikasi berjalan baik.'},
+ {q:'Sumber unduhan aplikasi yang paling aman adalah...',o:['Situs resmi pengembang aplikasi','Situs "gratis semua" tanpa identitas','Pesan berantai di media sosial','Flashdisk milik orang yang tidak dikenal'],a:0,e:'Situs resmi menyediakan berkas asli. Sumber lain berisiko berisi malware atau bundleware.'},
+ {q:'Microsoft Office termasuk perangkat lunak...',o:['Berlisensi (berbayar atau langganan)','Open source murni','Hanya untuk Linux','Tanpa installer'],a:0,e:'Office adalah perangkat lunak komersial. Penggunaan sah membutuhkan lisensi, misalnya Microsoft 365 atau lisensi pendidikan. Alternatif gratisnya antara lain LibreOffice.'},
+ {q:'Jendela <b>User Account Control</b> menanyakan izin saat installer dijalankan. Tindakan yang tepat adalah...',o:['Selalu klik No','Periksa penerbit, lalu klik Yes bila sumbernya terpercaya','Mematikan komputer','Mencabut kabel listrik'],a:1,e:'UAC melindungi sistem dari perubahan tanpa izin. Pastikan nama Verified publisher sesuai dengan pengembang aplikasi.'},
+ {q:'Cara menghapus (uninstall) aplikasi dari Windows 11 adalah...',o:['Menghapus ikon di Desktop saja','Settings → Apps → Installed apps → Uninstall','Menekan tombol Delete pada keyboard','Memformat flashdisk'],a:1,e:'Menghapus shortcut tidak menghapus programnya. Gunakan Settings → Apps → Installed apps lalu pilih Uninstall.'},
+ {q:'<code>ChromeSetup.exe</code> termasuk installer jenis...',o:['Online, mengunduh Chrome terbaru saat dijalankan','Offline yang berisi seluruh program','Driver audio','Sistem operasi'],a:0,e:'ChromeSetup.exe adalah installer kecil yang mengunduh komponen saat instalasi, sehingga membutuhkan internet.'},
+ {q:'Alternatif gratis dan open source untuk Microsoft Office adalah...',o:['LibreOffice','WinRAR','Rufus','Device Manager'],a:0,e:'LibreOffice menyediakan pengolah kata, lembar kerja, dan presentasi yang gratis dan kompatibel dengan format Office.'}
+];
+let appIdx=0;
+function mountApps(){
+  const a=APPS[appIdx];
+  mountStepper($('#sim3'),{title:'Simulasi instalasi '+a.name,steps:appSteps(a),tabs:APPS.map(x=>x.name),tab:appIdx,onTab:k=>{appIdx=k;mountApps()}});
+}
+routes['pertemuan-3']={lesson:true,
+ html:()=>lessonShell({cls:'h3c',n:3,title:'Instalasi Aplikasi',minutes:90,nq:Q3.length,
+  lead:'Pasang aplikasi standar yang dipakai sehari-hari: WinRAR, Microsoft Office, dan Google Chrome, dengan cara yang aman dan sesuai lisensi.',
+  toc:[['p3-konsep','Konsep dasar'],['p3-animasi','Animasi instalasi'],['p3-panduan','Panduan per aplikasi'],['p3-aman','Aman dan legal'],['p3-latihan','Latihan soal']],
+  body:`
+  <section class="sec" id="p3-konsep"><div class="goals"><h3>Tujuan pembelajaran</h3><ul>
+    <li>${I.check}Membedakan jenis lisensi perangkat lunak dan memilih sumber unduhan yang aman.</li>
+    <li>${I.check}Memasang WinRAR, Microsoft Office, dan Google Chrome langkah demi langkah.</li>
+    <li>${I.check}Menghapus aplikasi dengan benar dan menerapkan etika penggunaan lisensi.</li></ul></div>
+    <h2 style="margin-top:36px">Konsep dasar</h2><p class="sub">Aplikasi adalah perangkat lunak untuk tugas tertentu, seperti mengetik, menjelajah web, atau mengompres file.</p>
+    <div class="tbl"><table><thead><tr><th>Jenis lisensi</th><th>Artinya</th><th>Contoh</th></tr></thead><tbody>
+      <tr><td>Freeware</td><td>Gratis dipakai, kode tidak terbuka</td><td>Google Chrome</td></tr>
+      <tr><td>Open source</td><td>Gratis dan kode sumber terbuka</td><td>LibreOffice, 7-Zip</td></tr>
+      <tr><td>Shareware / trial</td><td>Gratis dicoba selama masa tertentu, lalu perlu lisensi</td><td>WinRAR (masa percobaan 40 hari)</td></tr>
+      <tr><td>Komersial / langganan</td><td>Berbayar sekali beli atau berlangganan</td><td>Microsoft Office</td></tr></tbody></table></div>
+    <div class="grid3" style="margin-top:20px">
+      <div class="tcard"><span class="num">SEBELUM MEMASANG</span><h3>Cek komputer</h3><ul><li>Windows 32-bit atau 64-bit</li><li>Ruang penyimpanan kosong</li><li>Koneksi internet bila online installer</li></ul></div>
+      <div class="tcard"><span class="num">JENIS INSTALLER</span><h3>.exe dan .msi</h3><p>Installer online berukuran kecil dan mengunduh sisanya. Installer offline berisi semua berkas dan bisa dipakai tanpa internet.</p></div>
+      <div class="tcard"><span class="num">SAAT MEMASANG</span><h3>Baca tiap layar</h3><p>Pilih <i>Custom install</i> bila ada, dan hilangkan centang program tambahan yang tidak dibutuhkan.</p></div></div>
+  </section>
+
+  <section class="sec" id="p3-animasi"><h2>Animasi instalasi aplikasi</h2><p class="sub">Pilih aplikasi pada tab, lalu ikuti prosesnya dari unduh sampai siap dipakai.</p><div id="sim3"></div></section>
+
+  <section class="sec" id="p3-panduan"><h2>Panduan per aplikasi</h2><p class="sub">Ringkasan fungsi, kebutuhan, dan catatan penting untuk tiap aplikasi.</p>
+    <div class="grid3">
+      <div class="tcard" style="--hue:#8E3B9E"><span class="num">WINRAR</span><h3>Kompres dan ekstrak</h3><ul><li>Fungsi: membuat dan membuka arsip RAR, ZIP, dan format lain</li><li>Unduh: win-rar.com, pilih versi 64-bit atau 32-bit</li><li>Pakai: klik kanan file → <i>Add to archive</i> atau <i>Extract Here</i></li><li>Lisensi: masa percobaan, lalu beli. Gratis: 7-Zip</li></ul></div>
+      <div class="tcard"><span class="num">MICROSOFT OFFICE</span><h3>Word, Excel, PowerPoint</h3><ul><li>Fungsi: dokumen, lembar kerja, dan presentasi</li><li>Kebutuhan: Windows 10/11, RAM 4 GB, akun Microsoft, dan lisensi</li><li>Pasang: office.com atau account.microsoft.com → <i>Install apps</i></li><li>Offline: Office Deployment Tool. Gratis: LibreOffice</li></ul></div>
+      <div class="tcard"><span class="num">GOOGLE CHROME</span><h3>Browser web</h3><ul><li>Fungsi: menjelajah web dan menjalankan aplikasi web</li><li>Unduh: google.com/chrome</li><li>Installer online otomatis. Offline: cari opsi standalone di halaman resmi</li><li>Browser utama: Settings → Apps → Default apps</li></ul></div></div>
+    <h3 style="font-size:18px;margin:30px 0 14px">Menghapus aplikasi (uninstall)</h3>
+    <ol class="steps"><li><b>Buka Settings</b><span>Tekan <kbd>Win</kbd>+<kbd>I</kbd>.</span></li><li><b>Masuk ke Apps → Installed apps</b><span>Daftar semua aplikasi terpasang muncul beserta ukurannya.</span></li><li><b>Pilih menu ⋯ lalu Uninstall</b><span>Ikuti petunjuk penghapusan. Menghapus ikon di Desktop saja tidak menghapus programnya.</span></li></ol>
+  </section>
+
+  <section class="sec" id="p3-aman"><h2>Aman dan legal</h2><p class="sub">Dua kebiasaan yang membedakan pengguna komputer yang baik.</p>
+    <div class="grid2">
+      ${callout('bad','Hindari crack dan keygen','<p>Aplikasi bajakan melanggar hak cipta dan sering disisipi malware. Gunakan lisensi sah, versi gratis, atau alternatif open source.</p>')}
+      ${callout('tip','Cek sebelum klik Next','<p>Pastikan alamat situs benar, penerbit di UAC sesuai, dan tidak ada program tambahan yang ikut tercentang.</p>')}
+    </div>
+  </section>
+
+  <section class="sec" id="p3-latihan"><h2>Latihan soal</h2><p class="sub">${Q3.length} soal pilihan ganda dengan pembahasan.</p><div id="quiz3"></div></section>`})+pager(['pertemuan-2','Pertemuan 2 · Instalasi Driver'],['kelompok-acak','Buat kelompok acak']),
+ mount:()=>{mountApps();mountQuiz($('#quiz3'),'pertemuan-3',Q3)}
+};
+
+/* ====================================================================
+   KELOMPOK ACAK
+   ==================================================================== */
+const SAMPLE=['Andi','Budi','Citra','Dewi','Eko','Fajar','Gita','Hana','Indra','Joko','Kiki','Lina'];
+const HUES=['var(--c1)','var(--c2)','var(--c3)','var(--accent)'];
+routes['kelompok-acak']={
+ html:()=>`
+  <div class="wrap" style="padding-block:36px 8px"><div class="l-title"><span class="eyebrow">Menu</span><h1>Kelompok Acak</h1><p>Tempel daftar nama siswa, tentukan jumlah kelompok, lalu acak. Setiap nama muncul tepat satu kali.</p></div></div>
+  <div class="wrap g-layout">
+   <form class="panel" id="gForm" novalidate>
+    <div class="field"><label for="gNames">Daftar nama (satu nama per baris)</label><textarea id="gNames" spellcheck="false" placeholder="Tulis atau tempel nama siswa"></textarea>
+      <small id="gCount" aria-live="polite"></small></div>
+    <div class="row"><button class="btn sm" type="button" id="gSample">Isi contoh</button><button class="btn sm" type="button" id="gClear">${I.trash}Bersihkan</button></div>
+    <div class="field"><span class="lab" id="gModeLab">Cara membagi</span><div class="seg" role="radiogroup" aria-labelledby="gModeLab"><label><input type="radio" name="mode" value="groups" checked>Jumlah kelompok</label><label><input type="radio" name="mode" value="size">Anggota per kelompok</label></div></div>
+    <div class="field"><label for="gNum" id="gNumLab">Jumlah kelompok</label><input type="number" id="gNum" min="1" max="50" value="4" inputmode="numeric"></div>
+    <label class="check"><input type="checkbox" id="gLead" checked>Pilih ketua kelompok secara acak</label>
+    <button class="btn primary" type="submit" style="justify-content:center">${I.shuffle}Acak kelompok</button>
+    <div class="g-msg" id="gMsg" role="status"></div>
+   </form>
+   <div class="g-res" id="gRes"></div>
+  </div>`,
+ mount:()=>{
+  const ta=$('#gNames'),num=$('#gNum'),res=$('#gRes'),msg=$('#gMsg'),cnt=$('#gCount');
+  let last=null,usingSample=false;
+  const saved=store.get('ri:names');
+  if(saved&&saved.trim()){ta.value=saved}else{ta.value=SAMPLE.join('\n');usingSample=true}
+  const parse=()=>{const seen=new Set(),out=[];let dup=0;ta.value.split(/\r?\n/).map(s=>s.trim()).filter(Boolean).forEach(n=>{const k=n.toLowerCase();if(seen.has(k))dup++;else{seen.add(k);out.push(n)}});return{names:out,dup}};
+  const updCount=()=>{const p=parse();cnt.textContent=p.names.length+' nama terbaca'+(p.dup?` · ${p.dup} nama kembar dilewati`:'')+(usingSample?' · ini nama contoh, ganti dengan daftar kelasmu':'')};
+  const setMsg=(t,err)=>{msg.textContent=t||'';msg.className='g-msg'+(err?' err':'')};
+  const empty=()=>{res.innerHTML=`<div class="g-empty">${I.users}<b style="color:var(--ink)">Hasil kelompok akan tampil di sini</b><span>Isi daftar nama, atur jumlah kelompok, lalu klik <b>Acak kelompok</b>.</span></div>`};
+  const mode=()=>$('input[name=mode]:checked').value;
+  const draw=(groups,withLead)=>{
+    const total=groups.reduce((s,g)=>s+g.length,0);
+    res.innerHTML=`<div class="g-bar"><div><b style="font-family:var(--font-display);font-size:20px">${groups.length} kelompok</b> <span class="g-note">· ${total} siswa</span></div>
+      <div class="row"><button class="btn sm" type="button" id="gAgain">${I.shuffle}Acak ulang</button><button class="btn sm primary" type="button" id="gCopy">${I.copy}Salin hasil</button></div></div>
+      <div class="g-grid">${groups.map((g,i)=>`<article class="gcard" style="--i:${i};--hue:${HUES[i%HUES.length]}"><header><b>Kelompok ${i+1}</b><span>${g.length} anggota</span></header><ul>${g.map((n,k)=>`<li>${withLead&&k===0?'<span class="lead">Ketua</span>':''}<span>${esc(n)}</span></li>`).join('')}</ul></article>`).join('')}</div>
+      <p class="g-note">Hasil berubah setiap kali diacak. Catat atau salin hasil sebelum mengacak ulang.</p>`;
+    $('#gAgain').addEventListener('click',run);
+    $('#gCopy').addEventListener('click',copy);
+  };
+  const split=(names,withLead)=>{
+    const n=names.length,v=Math.max(1,parseInt(num.value,10)||1);
+    let g=mode()==='groups'?Math.min(v,n):Math.ceil(n/v);
+    g=Math.max(1,Math.min(g,n));
+    const sh=shuffle(names),base=Math.floor(n/g),extra=n%g,out=[];let p=0;
+    for(let i=0;i<g;i++){const sz=base+(i<extra?1:0);out.push(sh.slice(p,p+sz));p+=sz}
+    return out;
+  };
+  const run=()=>{
+    const {names}=parse();
+    if(names.length<2){setMsg('Masukkan minimal 2 nama, satu nama per baris.',true);return}
+    const v=parseInt(num.value,10);
+    if(!v||v<1){setMsg('Isi angka 1 atau lebih pada kolom jumlah.',true);return}
+    setMsg('');
+    const withLead=$('#gLead').checked;
+    const groups=split(names,withLead);
+    last={groups,withLead};
+    const still=matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if(still){draw(groups,withLead);return}
+    res.innerHTML=`<div class="g-empty"><b style="color:var(--ink)">Mengacak…</b><span>${names.length} nama sedang dibagi</span></div>`;
+    setTimeout(()=>{if(document.getElementById('gRes')===res)draw(groups,withLead)},550);
+  };
+  const text=()=>last.groups.map((g,i)=>`Kelompok ${i+1}\n`+g.map((n,k)=>`${k+1}. ${n}${last.withLead&&k===0?' (ketua)':''}`).join('\n')).join('\n\n');
+  const copy=async()=>{
+    const t=text();let ok=false;
+    try{await navigator.clipboard.writeText(t);ok=true}catch(e){
+      try{const x=document.createElement('textarea');x.value=t;x.style.position='fixed';x.style.opacity='0';document.body.appendChild(x);x.select();ok=document.execCommand('copy');x.remove()}catch(e2){}
+    }
+    setMsg(ok?'Hasil kelompok disalin.':'Tidak bisa menyalin otomatis. Catat hasil dari layar.',!ok);
+  };
+  $('#gForm').addEventListener('submit',e=>{e.preventDefault();run()});
+  ta.addEventListener('input',()=>{usingSample=false;store.set('ri:names',ta.value);updCount()});
+  $('#gSample').addEventListener('click',()=>{ta.value=SAMPLE.join('\n');usingSample=true;updCount();setMsg('')});
+  $('#gClear').addEventListener('click',()=>{ta.value='';usingSample=false;store.set('ri:names','');updCount();last=null;empty();setMsg('');ta.focus()});
+  $$('input[name=mode]').forEach(r=>r.addEventListener('change',()=>{$('#gNumLab').textContent=mode()==='groups'?'Jumlah kelompok':'Jumlah anggota per kelompok';num.value=mode()==='groups'?4:3}));
+  updCount();empty();
+  if(usingSample){const g=split(parse().names,true);last={groups:g,withLead:true};draw(g,true)}
+  else if(parse().names.length>=2){run()}
+ }
+};
+
+/* ====== Mulai ====== */
+route();
+})();
+</script>
+
+</body>
+</html>
